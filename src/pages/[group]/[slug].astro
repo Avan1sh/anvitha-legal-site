@@ -1,0 +1,17 @@
+---
+import PracticePage from '../../components/PracticePage.astro';
+import { practiceGroups, type PracticeGroup, type PracticeItem } from '../../lib/navigation';
+
+export function getStaticPaths() {
+  return (['expertise', 'services'] as PracticeGroup[]).flatMap((group) =>
+    practiceGroups[group].map((item) => ({
+      params: { group, slug: item.slug },
+      props: { group, item }
+    }))
+  );
+}
+
+const { group, item } = Astro.props as { group: PracticeGroup; item: PracticeItem };
+---
+
+<PracticePage locale="en" group={group} item={item} />

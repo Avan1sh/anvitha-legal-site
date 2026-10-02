@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  headerLabels,
+  practicePath,
+  type PracticeGroup,
+  type PracticeItem
+} from '../lib/navigation';
+import { facts, type Locale } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  group: PracticeGroup;
+  item: PracticeItem;
+}
+
+const { locale, group, item } = Astro.props;
+---
+
+<BaseLayout
+  locale={locale}
+  page={group}
+  path={practicePath(group, item.slug)}
+  title={`${item.title} | ${facts.name}`}
+  description={`${item.title} page awaiting approved content.`}
+  noindex
+>
+  <section class="inner-hero page-wrap practice-placeholder">
+    <div>
+      <p class="eyebrow">{headerLabels[locale][group]}</p>
+      <h1 lang="en">{item.title}</h1>
+    </div>
+  </section>
+</BaseLayout>

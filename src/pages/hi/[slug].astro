@@ -1,0 +1,14 @@
+---
+import InnerPage from '../../components/InnerPage.astro';
+import { pages, type PageKey } from '../../lib/site';
+
+export function getStaticPaths() {
+  return pages
+    .filter((page) => page !== 'home')
+    .map((page) => ({ params: { slug: page }, props: { page } }));
+}
+
+const { page } = Astro.props as { page: Exclude<PageKey, 'home'> };
+---
+
+<InnerPage locale="hi" page={page} />

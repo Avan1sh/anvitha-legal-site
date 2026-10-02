@@ -1,0 +1,408 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '../assets/hero-still-life.png';
+import matrimonialImage from '../assets/expertise/matrimonial-lawyer.png';
+import familyDisputesImage from '../assets/expertise/family-disputes-lawyer.png';
+import chequeBounceImage from '../assets/expertise/cheque-bounce-lawyer.png';
+import civilImage from '../assets/expertise/civil-lawyer.png';
+import criminalImage from '../assets/expertise/criminal-lawyer.png';
+import supremeCourtImage from '../assets/expertise/supreme-court-lawyer.png';
+import corporateImage from '../assets/expertise/corporate-lawyer.png';
+import expertiseOutline from '../content/expertise.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { localizedPath, practiceGroups, practicePath, type PracticeGroup } from '../lib/navigation';
+import PhosphorIcon from './PhosphorIcon.astro';
+import { copy, facts, urlFor, type Locale } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = copy[locale];
+const h = t.home;
+const expertiseMedia = [
+  {
+    image: familyDisputesImage,
+    icon: 'users-three',
+    titleHi: 'वैवाहिक एवं पारिवारिक विवाद',
+    summary: {
+      en: 'Marriage, separation, children and family rights.',
+      hi: 'विवाह, अलगाव, बच्चों और पारिवारिक अधिकारों से जुड़े विषय।'
+    },
+    related: [
+      { group: 'expertise', slug: 'divorce-lawyer' },
+      { group: 'expertise', slug: 'domestic-violence-lawyer' },
+      { group: 'expertise', slug: 'matrimonial-lawyer' },
+      { group: 'expertise', slug: 'family-disputes-lawyer' }
+    ]
+  },
+  {
+    image: matrimonialImage,
+    icon: 'handshake',
+    titleHi: 'विवाह पंजीकरण',
+    summary: {
+      en: 'Court marriage, registration and relationship documents.',
+      hi: 'कोर्ट मैरिज, पंजीकरण और संबंधित दस्तावेज़।'
+    },
+    related: [{ group: 'services', slug: 'court-marriage-registration' }]
+  },
+  {
+    image: criminalImage,
+    icon: 'gavel',
+    titleHi: 'आपराधिक मामले',
+    summary: {
+      en: 'Complaints, bail, investigation, trial and appeals.',
+      hi: 'शिकायत, ज़मानत, जाँच, सुनवाई और अपील।'
+    },
+    related: [
+      { group: 'expertise', slug: 'criminal-lawyer' },
+      { group: 'expertise', slug: 'bail-matters-lawyer' },
+      { group: 'expertise', slug: 'cheque-bounce-lawyer' }
+    ]
+  },
+  {
+    image: civilImage,
+    icon: 'scales',
+    titleHi: 'दीवानी मामले',
+    summary: {
+      en: 'Property, succession, contracts and civil remedies.',
+      hi: 'संपत्ति, उत्तराधिकार, अनुबंध और दीवानी उपाय।'
+    },
+    related: [
+      { group: 'expertise', slug: 'civil-lawyer' },
+      { group: 'services', slug: 'property-lawyer' }
+    ]
+  },
+  {
+    image: chequeBounceImage,
+    icon: 'receipt',
+    titleHi: 'उपभोक्ता विवाद',
+    summary: {
+      en: 'Goods, services, refunds and consumer forums.',
+      hi: 'वस्तुओं, सेवाओं, रिफंड और उपभोक्ता मंचों से जुड़े विषय।'
+    },
+    related: [{ group: 'services', slug: 'consumer-disputes-lawyer' }]
+  },
+  {
+    image: supremeCourtImage,
+    icon: 'bank',
+    titleHi: 'कानून के अन्य क्षेत्र',
+    summary: {
+      en: 'Constitutional, service, labour and other matters.',
+      hi: 'संवैधानिक, सेवा, श्रम और अन्य मामले।'
+    },
+    related: [
+      { group: 'expertise', slug: 'supreme-court-lawyer' },
+      { group: 'expertise', slug: 'corporate-lawyer' },
+      { group: 'services', slug: 'delhi-high-court-lawyer' },
+      { group: 'services', slug: 'debt-recovery-tribunal-lawyer' }
+    ]
+  },
+  {
+    image: corporateImage,
+    icon: 'briefcase',
+    titleHi: 'कानूनी दस्तावेज़',
+    summary: {
+      en: 'Agreements, notices, court papers and applications.',
+      hi: 'समझौते, नोटिस, अदालती कागज़ात और आवेदन।'
+    },
+    related: [{ group: 'services', slug: 'legal-documentation' }]
+  }
+] as const;
+const expertiseCards = expertiseOutline.map((item, index) => ({
+  ...item,
+  ...expertiseMedia[index]
+}));
+function relatedTitle(group: PracticeGroup, slug: string) {
+  return practiceGroups[group].find((item) => item.slug === slug)?.title ?? slug;
+}
+---
+
+<BaseLayout locale={locale} page="home" title={h.title} description={h.description}>
+  <section class="hero page-wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">{h.eyebrow}</p>
+      <h1>{h.heading}</h1>
+      <p class="hero-intro">{h.intro}</p>
+      <div class="hero-actions">
+        <a class="button button-dark" href={urlFor('how-we-help', locale)}>
+          {h.primary}
+          <PhosphorIcon name="arrow-up-right" />
+        </a>
+        <a class="text-link" href={urlFor('get-help', locale)}>
+          {h.secondary}
+          <PhosphorIcon name="arrow-right" />
+        </a>
+      </div>
+      <div class="hero-signature">
+        <span class="signature-line" aria-hidden="true"></span>
+        <span>{t.initiative}</span>
+      </div>
+    </div>
+    <figure class="hero-visual">
+      <Image
+        src={heroImage}
+        alt=""
+        widths={[640, 960, 1280]}
+        sizes="(max-width: 760px) 100vw, 52vw"
+        format="webp"
+        loading="eager"
+      />
+      <figcaption>{h.imageCaption}</figcaption>
+    </figure>
+  </section>
+
+  <section class="topic-marquee" aria-label={h.topicsTitle}>
+    <div class="marquee-track">
+      <div class="marquee-set">
+        {h.topics.map((topic) => (
+          <span>
+            {topic}
+            <PhosphorIcon name="diamond" />
+          </span>
+        ))}
+      </div>
+      <div class="marquee-set" aria-hidden="true">
+        {h.topics.map((topic) => (
+          <span>
+            {topic}
+            <PhosphorIcon name="diamond" />
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="expertise-section section-pad page-wrap" aria-labelledby="expertise-title">
+    <div class="expertise-heading">
+      <div>
+        <p class="eyebrow">{locale === 'hi' ? 'कानूनी क्षेत्र' : 'Legal areas'}</p>
+        <h2 id="expertise-title">{locale === 'hi' ? 'हमारी विशेषज्ञता' : 'Our expertise'}</h2>
+      </div>
+      <p>
+        {locale === 'hi'
+          ? 'किसी कार्ड को खोलकर उससे जुड़े कानूनी विषय देखें।'
+          : 'Open a card to explore the topics in that legal area.'}
+      </p>
+    </div>
+    <div class="expertise-grid">
+      {expertiseCards.map((card) => (
+        <a class="expertise-card" href={`#expertise-${card.slug}`}>
+          <div class="expertise-card-image">
+            <Image
+              src={card.image}
+              alt=""
+              widths={[320, 480, 640]}
+              sizes="(max-width: 600px) 38vw, (max-width: 1100px) 50vw, 25vw"
+              format="webp"
+              loading="lazy"
+            />
+          </div>
+          <div class="expertise-card-content">
+            <span class="expertise-card-icon">
+              <PhosphorIcon name={card.icon} />
+            </span>
+            <h3 lang={locale === 'hi' ? undefined : 'en'}>
+              {locale === 'hi' ? card.titleHi : card.title}
+            </h3>
+            <p>{card.summary[locale]}</p>
+            <span class="expertise-card-link">
+              {card.topics.length} {locale === 'hi' ? 'विषय देखें' : 'topics · Open card'}
+              <PhosphorIcon name="arrow-right" />
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div class="expertise-panels">
+      {expertiseCards.map((card, index) => (
+        <section
+          id={`expertise-${card.slug}`}
+          class="expertise-panel"
+          tabindex="-1"
+          aria-labelledby={`expertise-panel-title-${card.slug}`}
+        >
+          <div class="expertise-panel-head">
+            <div>
+              <p class="eyebrow">
+                {locale === 'hi' ? 'कानूनी क्षेत्र' : 'Legal area'} {index + 1} /{' '}
+                {expertiseCards.length}
+              </p>
+              <h3 id={`expertise-panel-title-${card.slug}`}>
+                {locale === 'hi' ? card.titleHi : card.title}
+              </h3>
+            </div>
+            <a
+              class="expertise-panel-close"
+              href="#expertise-title"
+              aria-label={locale === 'hi' ? 'विषय बंद करें' : 'Close topics'}
+            >
+              <PhosphorIcon name="plus" />
+            </a>
+          </div>
+          {locale === 'hi' && (
+            <p class="expertise-language-note">विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।</p>
+          )}
+          <ul class="expertise-topic-list" lang="en">
+            {card.topics.map((topic) => (
+              <li>
+                <strong>{topic.title}</strong>
+                <p>{topic.detail}</p>
+              </li>
+            ))}
+          </ul>
+          <div class="expertise-related">
+            <h4>{locale === 'hi' ? 'संबंधित पेज' : 'Related pages'}</h4>
+            <div>
+              {card.related.map((link) => (
+                <a
+                  href={localizedPath(practicePath(link.group, link.slug), locale)}
+                  lang={locale === 'hi' ? 'en' : undefined}
+                >
+                  {relatedTitle(link.group, link.slug)}
+                  <PhosphorIcon name="arrow-up-right" />
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="expertise-panel-foot">
+            <p>{t.generalNotice}</p>
+            <nav aria-label={locale === 'hi' ? 'कानूनी क्षेत्र बदलें' : 'Browse legal areas'}>
+              <a
+                href={`#expertise-${expertiseCards[(index + expertiseCards.length - 1) % expertiseCards.length].slug}`}
+              >
+                {locale === 'hi' ? 'पिछला' : 'Previous'}
+              </a>
+              <a href={`#expertise-${expertiseCards[(index + 1) % expertiseCards.length].slug}`}>
+                {locale === 'hi' ? 'अगला' : 'Next'}
+                <PhosphorIcon name="arrow-right" />
+              </a>
+            </nav>
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="support-section section-pad page-wrap" id="support">
+    <div class="section-heading">
+      <p class="eyebrow">{locale === 'hi' ? 'हमारी सहायता' : 'What we do'}</p>
+      <h2>{h.supportTitle}</h2>
+      <p>{h.supportIntro}</p>
+    </div>
+    <div class="support-grid">
+      {h.services.map((service, i) => (
+        <a class={`support-card support-card-${i + 1}`} href={urlFor('how-we-help', locale)}>
+          <span class="card-number">{service.number}</span>
+          <div>
+            <h3>{service.title}</h3>
+            <p>{service.text}</p>
+          </div>
+          <PhosphorIcon name="arrow-up-right" class="card-arrow" />
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="approach-section section-pad" data-motion-root>
+    <div class="page-wrap approach-grid">
+      <div class="approach-intro">
+        <p class="eyebrow">{locale === 'hi' ? 'हमारा तरीका' : 'A thoughtful process'}</p>
+        <h2>{h.approachTitle}</h2>
+        <p>{h.approachIntro}</p>
+        <a class="text-link" href={urlFor('about', locale)}>
+          {t.nav.about}
+          <PhosphorIcon name="arrow-right" />
+        </a>
+      </div>
+      <div class="approach-steps">
+        {h.steps.map((step, i) => (
+          <article class="approach-step">
+            <span>0{i + 1}</span>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="topics-section section-pad page-wrap">
+    <div class="topics-title">
+      <p class="eyebrow">{locale === 'hi' ? 'सामान्य मुद्दे' : 'Common concerns'}</p>
+      <h2 data-text-reveal>{h.topicsTitle}</h2>
+    </div>
+    <div class="topic-list">
+      {h.topics.map((topic, i) => (
+        <a href={urlFor('how-we-help', locale)}>
+          <span>0{i + 1}</span>
+          <strong>{topic}</strong>
+          <PhosphorIcon name="arrow-up-right" />
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="work-teaser section-pad">
+    <div class="page-wrap work-teaser-grid">
+      <div class="work-visual" aria-hidden="true">
+        <div class="work-visual-inner">
+          <span>A.</span>
+          <div class="work-visual-lines">
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+        </div>
+      </div>
+      <div class="work-teaser-copy">
+        <p class="eyebrow">{locale === 'hi' ? 'हमारा कार्य' : 'Our work'}</p>
+        <h2>{h.workTitle}</h2>
+        <p>{h.workText}</p>
+        <a class="text-link" href={urlFor('our-work', locale)}>
+          {h.workLink}
+          <PhosphorIcon name="arrow-right" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-teaser section-pad page-wrap">
+    <div class="section-heading">
+      <p class="eyebrow">{locale === 'hi' ? 'सवाल-जवाब' : 'Good to know'}</p>
+      <h2>{t.faq.heading}</h2>
+    </div>
+    <div class="faq-list">
+      {t.faq.items.slice(0, 3).map((item) => (
+        <details>
+          <summary>
+            {item.q}
+            <PhosphorIcon name="plus" />
+          </summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+    <a class="text-link faq-more" href={urlFor('faq', locale)}>
+      {t.nav.faq}
+      <PhosphorIcon name="arrow-right" />
+    </a>
+  </section>
+
+  <section class="closing-cta section-pad">
+    <div class="page-wrap">
+      <p class="eyebrow">{facts.name}</p>
+      <h2>{h.ctaTitle}</h2>
+      <p>{h.ctaText}</p>
+      <a class="button button-light" href={urlFor('get-help', locale)}>
+        {h.ctaButton}
+        <PhosphorIcon name="arrow-up-right" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  import '../scripts/motion';
+</script>

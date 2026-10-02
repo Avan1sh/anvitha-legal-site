@@ -1,0 +1,259 @@
+---
+import '../styles/global.css';
+import '@fontsource-variable/eb-garamond/wght.css';
+import '@fontsource-variable/manrope/wght.css';
+import PhosphorIcon from '../components/PhosphorIcon.astro';
+import { indexingEnabled } from '../lib/indexing';
+import {
+  headerLabels,
+  localizedPath,
+  practiceGroups,
+  practicePath,
+  type PracticeGroup
+} from '../lib/navigation';
+import { copy, facts, urlFor, type Locale, type PageKey } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  page: PageKey | PracticeGroup | 'contact' | 'book-appointment';
+  path?: string;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { locale, page, path, title, description, noindex = false } = Astro.props;
+const t = copy[locale];
+const header = headerLabels[locale];
+const otherLocale: Locale = locale === 'en' ? 'hi' : 'en';
+const routePath = path ?? urlFor(page as PageKey, 'en');
+const canonical = new URL(localizedPath(routePath, locale), Astro.site ?? Astro.url);
+const alternate = new URL(localizedPath(routePath, otherLocale), Astro.site ?? Astro.url);
+const indexEnabled = indexingEnabled(Astro.site);
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#3C1518" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={indexEnabled && !noindex ? 'index,follow' : 'noindex,nofollow'} />
+    <link rel="canonical" href={canonical.href} />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href={new URL(localizedPath(routePath, 'en'), Astro.site ?? Astro.url).href}
+    />
+    <link
+      rel="alternate"
+      hreflang="hi"
+      href={new URL(localizedPath(routePath, 'hi'), Astro.site ?? Astro.url).href}
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localizedPath(routePath, 'en'), Astro.site ?? Astro.url).href}
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body class={locale === 'hi' ? 'is-hindi' : ''}>
+    <a class="skip-link" href="#content">
+      {locale === 'hi' ? 'मुख्य सामग्री पर जाएँ' : 'Skip to content'}
+    </a>
+    <header class="site-header">
+      <div class="header-inner page-wrap">
+        <a
+          class="wordmark"
+          href={urlFor('home', locale)}
+          aria-label={`${facts.name} — ${t.nav.home}`}
+        >
+          <span class="wordmark-mark" aria-hidden="true">
+            A<span>.</span>
+          </span>
+          <span class="wordmark-text">
+            <strong>Anvitha</strong>
+            <small>LEGAL</small>
+          </span>
+        </a>
+        <nav
+          class="desktop-nav"
+          aria-label={locale === 'hi' ? 'मुख्य नेविगेशन' : 'Main navigation'}
+        >
+          <a href={urlFor('about', locale)} aria-current={page === 'about' ? 'page' : undefined}>
+            {t.nav.about}
+          </a>
+          {(['expertise', 'services'] as PracticeGroup[]).map((group) => (
+            <details
+              class:list={[
+                'nav-dropdown',
+                `nav-dropdown-${group}`,
+                { 'is-current': page === group }
+              ]}
+              name="desktop-header"
+            >
+              <summary>
+                {header[group]}
+                <PhosphorIcon name="caret-down" />
+              </summary>
+              <div class="nav-dropdown-panel">
+                {practiceGroups[group].map((item) => (
+                  <a
+                    href={localizedPath(practicePath(group, item.slug), locale)}
+                    lang={locale === 'hi' ? 'en' : undefined}
+                    aria-current={
+                      page === group && routePath === practicePath(group, item.slug)
+                        ? 'page'
+                        : undefined
+                    }
+                  >
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+            </details>
+          ))}
+          <a
+            href={localizedPath('/contact', locale)}
+            aria-current={page === 'contact' ? 'page' : undefined}
+          >
+            {header.contact}
+          </a>
+        </nav>
+        <div class="header-actions">
+          <a
+            class="language-link"
+            href={alternate.pathname}
+            lang={otherLocale}
+            aria-label={locale === 'hi' ? 'Switch to English' : 'हिंदी में पढ़ें'}
+          >
+            {t.switchLanguage}
+          </a>
+          <a
+            class="button button-dark header-cta"
+            href={localizedPath('/book-appointment', locale)}
+            aria-current={page === 'book-appointment' ? 'page' : undefined}
+          >
+            {header.appointment} <PhosphorIcon name="arrow-up-right" />
+          </a>
+          <details class="mobile-menu">
+            <summary aria-label={t.menu}>
+              <span></span>
+              <span></span>
+            </summary>
+            <nav aria-label={locale === 'hi' ? 'मोबाइल नेविगेशन' : 'Mobile navigation'}>
+              <a href={urlFor('home', locale)} aria-current={page === 'home' ? 'page' : undefined}>
+                {t.nav.home}
+              </a>
+              <a
+                href={urlFor('about', locale)}
+                aria-current={page === 'about' ? 'page' : undefined}
+              >
+                {t.nav.about}
+              </a>
+              {(['expertise', 'services'] as PracticeGroup[]).map((group) => (
+                <details class="mobile-dropdown" name="mobile-header">
+                  <summary>
+                    {header[group]}
+                    <PhosphorIcon name="caret-down" />
+                  </summary>
+                  <div class="mobile-dropdown-panel">
+                    {practiceGroups[group].map((item) => (
+                      <a
+                        href={localizedPath(practicePath(group, item.slug), locale)}
+                        lang={locale === 'hi' ? 'en' : undefined}
+                        aria-current={
+                          page === group && routePath === practicePath(group, item.slug)
+                            ? 'page'
+                            : undefined
+                        }
+                      >
+                        {item.title}
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              ))}
+              <a
+                href={localizedPath('/contact', locale)}
+                aria-current={page === 'contact' ? 'page' : undefined}
+              >
+                {header.contact}
+              </a>
+              <a
+                class="mobile-appointment"
+                href={localizedPath('/book-appointment', locale)}
+                aria-current={page === 'book-appointment' ? 'page' : undefined}
+              >
+                {header.appointment} <PhosphorIcon name="arrow-up-right" />
+              </a>
+            </nav>
+          </details>
+        </div>
+      </div>
+    </header>
+    <main id="content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="page-wrap footer-top">
+        <div>
+          <p class="footer-kicker">{facts.name}</p>
+          <h2>{t.footerLead}</h2>
+          <a class="button button-light" href={urlFor('get-help', locale)}>
+            {t.footerAction}
+            <PhosphorIcon name="arrow-up-right" />
+          </a>
+        </div>
+        <div class="footer-links">
+          <div>
+            <span>{locale === 'hi' ? 'देखें' : 'Explore'}</span>
+            <a href={urlFor('about', locale)}>{t.nav.about}</a>
+            <a href={urlFor('how-we-help', locale)}>{t.nav['how-we-help']}</a>
+            <a href={urlFor('our-work', locale)}>{t.nav['our-work']}</a>
+          </div>
+          <div>
+            <span>{locale === 'hi' ? 'जानकारी' : 'Information'}</span>
+            <a href={urlFor('faq', locale)}>{t.nav.faq}</a>
+            <a href={urlFor('privacy', locale)}>{t.nav.privacy}</a>
+            <a href={urlFor('disclaimer', locale)}>{t.nav.disclaimer}</a>
+          </div>
+        </div>
+      </div>
+      <div class="page-wrap footer-bottom">
+        <p>{t.initiative}</p>
+        <p>{t.footerLegal}</p>
+        <p>
+          © {new Date().getFullYear()} {facts.trust}
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+<script>
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      document
+        .querySelectorAll<HTMLDetailsElement>(
+          '.nav-dropdown[open], .mobile-dropdown[open], .mobile-menu[open]'
+        )
+        .forEach((menu) => {
+          menu.open = false;
+        });
+    }
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+    document
+      .querySelectorAll<HTMLDetailsElement>(
+        '.nav-dropdown[open], .mobile-dropdown[open], .mobile-menu[open]'
+      )
+      .forEach((menu) => {
+        if (!menu.contains(target)) menu.open = false;
+      });
+  });
+</script>

@@ -1,0 +1,60 @@
+---
+import arrowRight from '@phosphor-icons/core/regular/arrow-right.svg?raw';
+import arrowUpRight from '@phosphor-icons/core/regular/arrow-up-right.svg?raw';
+import plus from '@phosphor-icons/core/regular/plus.svg?raw';
+import caretDown from '@phosphor-icons/core/regular/caret-down.svg?raw';
+import diamond from '@phosphor-icons/core/fill/diamond-fill.svg?raw';
+import heartBreak from '@phosphor-icons/core/regular/heart-break.svg?raw';
+import shieldCheck from '@phosphor-icons/core/regular/shield-check.svg?raw';
+import handshake from '@phosphor-icons/core/regular/handshake.svg?raw';
+import usersThree from '@phosphor-icons/core/regular/users-three.svg?raw';
+import lockOpen from '@phosphor-icons/core/regular/lock-open.svg?raw';
+import receipt from '@phosphor-icons/core/regular/receipt.svg?raw';
+import scales from '@phosphor-icons/core/regular/scales.svg?raw';
+import gavel from '@phosphor-icons/core/regular/gavel.svg?raw';
+import bank from '@phosphor-icons/core/regular/bank.svg?raw';
+import briefcase from '@phosphor-icons/core/regular/briefcase.svg?raw';
+
+type IconName =
+  | 'arrow-right'
+  | 'arrow-up-right'
+  | 'plus'
+  | 'caret-down'
+  | 'diamond'
+  | 'heart-break'
+  | 'shield-check'
+  | 'handshake'
+  | 'users-three'
+  | 'lock-open'
+  | 'receipt'
+  | 'scales'
+  | 'gavel'
+  | 'bank'
+  | 'briefcase';
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+const icons: Record<IconName, string> = {
+  'arrow-right': arrowRight,
+  'arrow-up-right': arrowUpRight,
+  plus,
+  'caret-down': caretDown,
+  diamond,
+  'heart-break': heartBreak,
+  'shield-check': shieldCheck,
+  handshake,
+  'users-three': usersThree,
+  'lock-open': lockOpen,
+  receipt,
+  scales,
+  gavel,
+  bank,
+  briefcase
+};
+---
+
+<span class:list={['phosphor-icon', className]} aria-hidden="true" set:html={icons[name]} />

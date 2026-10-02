@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhosphorIcon from './PhosphorIcon.astro';
+import { headerLabels } from '../lib/navigation';
+import { facts, urlFor, type Locale } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  kind: 'contact' | 'book-appointment';
+}
+
+const { locale, kind } = Astro.props;
+const isContact = kind === 'contact';
+const label = isContact ? headerLabels[locale].contact : headerLabels[locale].appointment;
+const intro = isContact
+  ? locale === 'hi'
+    ? 'इस पहल के सीधे फोन, ईमेल और कार्यालय विवरण की पुष्टि की जा रही है। आधिकारिक सहायता के विकल्प नीचे दिए लिंक पर देखें।'
+    : 'Direct phone, email, and office details are being confirmed. You can find official help routes at the link below.'
+  : locale === 'hi'
+    ? 'इस प्रीव्यू पर अभी अपॉइंटमेंट बुकिंग उपलब्ध नहीं है। पुष्टि किए गए संपर्क विवरण और उपलब्ध समय बाद में जोड़े जाएँगे।'
+    : 'Appointment booking is not available through this preview yet. Verified contact details and availability will be added later.';
+---
+
+<BaseLayout
+  locale={locale}
+  page={kind}
+  path={`/${kind}`}
+  title={`${label} | ${facts.name}`}
+  description={intro}
+  noindex
+>
+  <section class="inner-hero page-wrap">
+    <div>
+      <p class="eyebrow">{label}</p>
+      <h1>{label}</h1>
+      <p class="inner-intro">{intro}</p>
+      <a class="text-link status-link" href={urlFor('get-help', locale)}>
+        {locale === 'hi' ? 'आधिकारिक सहायता देखें' : 'Find official help'}
+        <PhosphorIcon name="arrow-right" />
+      </a>
+    </div>
+    <div class="inner-hero-symbol" aria-hidden="true">
+      <span>A.</span>
+    </div>
+  </section>
+</BaseLayout>
