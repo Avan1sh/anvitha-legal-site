@@ -1,308 +1,97 @@
 [
   {
-    "slug": "matrimonial-family-disputes",
-    "title": "Matrimonial & Family Disputes",
-    "topics": [
-      {
-        "title": "Validity of marriage",
-        "detail": "Void and voidable marriages under the Hindu Marriage Act, 1955 and the Special Marriage Act, 1954; nullity (prohibited relationship, underage marriage, non-consummation); bigamy; fraud, misrepresentation or concealment of material facts such as health or an earlier marriage."
-      },
-      {
-        "title": "Divorce & separation",
-        "detail": "Divorce by mutual consent or contested divorce on grounds such as cruelty, desertion, adultery, conversion or mental disorder; judicial separation; restitution of conjugal rights."
-      },
-      {
-        "title": "Maintenance & alimony",
-        "detail": "Maintenance for wife, children and parents under Section 144 BNSS (earlier Section 125 CrPC) and personal laws; interim maintenance during proceedings; permanent alimony and final settlement."
-      },
-      {
-        "title": "Children",
-        "detail": "Custody, guardianship, visitation rights, child support and education expenses."
-      },
-      {
-        "title": "Matrimonial property",
-        "detail": "Recovery of streedhan and dowry articles; rights in the matrimonial home; division of jointly acquired property, house, land and jewellery."
-      },
-      {
-        "title": "Domestic violence",
-        "detail": "Physical, emotional, verbal and economic abuse and mental harassment; protection, residence, custody and monetary relief orders under the Protection of Women from Domestic Violence Act, 2005."
-      },
-      {
-        "title": "Dowry",
-        "detail": "Dowry demands before or after marriage; complaints under the Dowry Prohibition Act, 1961; recovery of dowry articles."
-      },
-      {
-        "title": "Criminal cases arising out of marriage",
-        "detail": "Cruelty by husband or his relatives (Sections 85–86 BNS, earlier 498A IPC); criminal breach of trust over streedhan (Section 316 BNS, earlier 406 IPC); bigamy (Section 82 BNS, earlier 494 IPC); dowry death (Section 80 BNS, earlier 304B IPC); abetment of suicide (Section 108 BNS, earlier 306 IPC)."
-      },
-      {
-        "title": "Inter-caste and inter-faith couples",
-        "detail": "Protection from family pressure, threats and honour-based harassment."
-      },
-      {
-        "title": "Other family matters",
-        "detail": "Desertion and abandonment, adoption, inheritance and succession rights after divorce or separation, and disputes involving NRI spouses."
-      }
+    "slug": "criminal-law",
+    "title": "Criminal Law",
+    "group": "expertise",
+    "items": [
+      "Cheque dishonour complaints and defence under Section 138, NI Act",
+      "Bail and anticipatory bail",
+      "Filing and contesting criminal complaints",
+      "Defence in sessions and magistrate trials",
+      "Quashing and revision petitions"
     ]
   },
   {
-    "slug": "marriage-registration",
-    "title": "Marriage Registration",
-    "topics": [
-      {
-        "title": "Court marriage",
-        "detail": "Marriage under the Special Marriage Act, 1954: notice of intended marriage, objection period and solemnisation before the Marriage Officer."
-      },
-      {
-        "title": "Registration of marriage",
-        "detail": "Registration of marriages already solemnised and obtaining a marriage certificate under the applicable Haryana rules."
-      },
-      {
-        "title": "Live-in relationships",
-        "detail": "Awareness of the rights and protections available to couples in live-in relationships, and help with declarations and related documents."
-      }
+    "slug": "family-matrimonial-law",
+    "title": "Family & Matrimonial Law",
+    "group": "expertise",
+    "items": [
+      "Divorce, contested and by mutual consent",
+      "Maintenance under Section 144, BNSS",
+      "Domestic violence proceedings",
+      "Child custody and guardianship",
+      "Restitution of conjugal rights and judicial separation"
     ]
   },
   {
-    "slug": "criminal-matters",
-    "title": "Criminal Matters",
-    "topics": [
-      {
-        "title": "Complaints & FIRs",
-        "detail": "Drafting police complaints; Zero FIR; what to do if the police refuse to register an FIR (complaint to the Superintendent of Police, application to the Magistrate under Section 175(3) BNSS, earlier 156(3) CrPC); private complaints before the Magistrate."
-      },
-      {
-        "title": "Advice to complainants and accused persons",
-        "detail": "Rights on arrest, the offences involved and the remedies available."
-      },
-      {
-        "title": "Bail",
-        "detail": "Anticipatory bail (Section 482 BNSS, earlier 438 CrPC), regular bail, interim protection from arrest and challenges to remand or custody orders."
-      },
-      {
-        "title": "Investigation stage",
-        "detail": "Guidance on recording of statements and on search and seizure; applications for fair or court-monitored investigation."
-      },
-      {
-        "title": "Trial stage",
-        "detail": "Framing of charges and discharge applications, evidence and cross-examination, and final arguments."
-      },
-      {
-        "title": "After the trial",
-        "detail": "Appeals against conviction or acquittal, criminal revisions, suspension of sentence pending appeal, and parole and furlough."
-      },
-      {
-        "title": "Victim relief",
-        "detail": "Victim compensation (Section 396 BNSS, earlier 357A CrPC) and the rights of victims during investigation and trial."
-      },
-      {
-        "title": "Economic offences",
-        "detail": "Cheque bounce (Section 138, Negotiable Instruments Act, 1881), cheating, fraud and forgery."
-      },
-      {
-        "title": "Cyber crime",
-        "detail": "Online financial fraud, hacking, data theft, cyber defamation and trolling; online financial fraud can be reported on the 1930 helpline, and cybercrime complaints can be filed at cybercrime.gov.in."
-      },
-      {
-        "title": "Women & children",
-        "detail": "Domestic violence, dowry harassment, sexual offences and cases under the POCSO Act, 2012."
-      },
-      {
-        "title": "Special laws",
-        "detail": "Matters under the NDPS Act, the Prevention of Corruption Act and the Prevention of Money Laundering Act."
-      },
-      {
-        "title": "Preventive & other proceedings",
-        "detail": "Security proceedings for keeping the peace, externment orders, quashing of FIRs by the High Court, and compounding or settlement of compoundable offences."
-      }
+    "slug": "civil-law",
+    "title": "Civil Law",
+    "group": "expertise",
+    "items": [
+      "Suits for recovery of money",
+      "Defamation suits under Section 356, BNS 2023",
+      "Injunction and declaration suits",
+      "Partition and property disputes",
+      "Landlord–tenant and rent matters"
     ]
   },
   {
-    "slug": "civil-matters",
-    "title": "Civil Matters",
-    "topics": [
-      {
-        "title": "Property & ownership",
-        "detail": "Declaration of title, partition, possession and eviction, easement and boundary disputes, adverse possession, encroachment and trespass."
-      },
-      {
-        "title": "Succession & inheritance",
-        "detail": "Wills, intestate succession, succession certificates and family settlements."
-      },
-      {
-        "title": "Contracts & business",
-        "detail": "Breach of contract, specific performance of agreements to sell, partnership and business disputes, arbitration and mediation."
-      },
-      {
-        "title": "Recovery of money",
-        "detail": "Loans, advances and unpaid bills; mortgage, pledge and hypothecation disputes."
-      },
-      {
-        "title": "Rent & tenancy",
-        "detail": "Eviction for non-payment or misuse, fixation of fair rent, landlord–tenant disputes, lease and licence agreements."
-      },
-      {
-        "title": "Compensation claims",
-        "detail": "Motor accident claims before the Motor Accident Claims Tribunal (MACT), medical negligence, defamation, nuisance and trespass."
-      },
-      {
-        "title": "Service & employment",
-        "detail": "Wrongful termination and recovery of salary and service benefits."
-      },
-      {
-        "title": "Trusts, societies & companies",
-        "detail": "Management disputes in trusts, NGOs and societies, shareholder disputes, and dissolution of partnerships or trusts."
-      },
-      {
-        "title": "Intellectual property",
-        "detail": "Trademark, copyright and patent infringement, passing off, and licensing and royalty disputes."
-      },
-      {
-        "title": "Civil miscellaneous",
-        "detail": "Temporary and permanent injunctions, declaratory suits, execution of decrees (attachment, auction, recovery) and writ petitions."
-      }
+    "slug": "banking-debt-recovery",
+    "title": "Banking & Debt Recovery",
+    "group": "expertise",
+    "items": [
+      "Representation before the Debts Recovery Tribunal",
+      "Written statements and borrower defence in OA proceedings",
+      "SARFAESI-related matters",
+      "Loan and guarantee disputes"
     ]
   },
   {
-    "slug": "consumer-disputes",
-    "title": "Consumer Disputes",
-    "topics": [
-      {
-        "title": "Deficiency in service",
-        "detail": "Banking, insurance, telecom, medical, education, travel and transport services."
-      },
-      {
-        "title": "Defective goods",
-        "detail": "Electronics, vehicles, food, medicines and household products; warranty disputes."
-      },
-      {
-        "title": "Unfair trade practices",
-        "detail": "Misleading advertisements, false promises, overcharging and hidden charges."
-      },
-      {
-        "title": "Online shopping",
-        "detail": "Non-delivery, defective products and refusal of refund or return."
-      },
-      {
-        "title": "Real estate",
-        "detail": "Delay in possession, poor construction quality and false promises by builders."
-      },
-      {
-        "title": "Banking & insurance",
-        "detail": "Wrong deductions, ATM and card frauds, loan mis-selling, and delay or refusal of insurance claims."
-      },
-      {
-        "title": "Education",
-        "detail": "Excessive fees, false placement guarantees and deficient services."
-      },
-      {
-        "title": "Consumer Commission proceedings",
-        "detail": "Complaints before the District, State and National Consumer Commissions under the Consumer Protection Act, 2019 (including online filing through e-Jagriti), appeals, revisions and execution of orders for refund or compensation."
-      },
-      {
-        "title": "Consumer mediation",
-        "detail": "Mediation under the Consumer Protection Act, 2019 and drafting enforceable settlement agreements."
-      },
-      {
-        "title": "Consumer awareness",
-        "detail": "Awareness programmes on consumer rights and how to complain."
-      }
+    "slug": "service-education-law",
+    "title": "Service & Education Law",
+    "group": "expertise",
+    "items": [
+      "Salary, allowance and LTC claims of government employees",
+      "Departmental inquiries and disciplinary proceedings",
+      "Admission, examination and student-rights disputes against institutions",
+      "Pension and retiral benefit matters"
     ]
   },
   {
-    "slug": "other-areas-of-law",
-    "title": "Other Areas of Law",
-    "topics": [
-      {
-        "title": "Constitutional & writ matters",
-        "detail": "Enforcement of fundamental rights (Article 226 before the High Court and Article 32 before the Supreme Court), writs of habeas corpus, mandamus, certiorari, prohibition and quo warranto, and public interest litigation."
-      },
-      {
-        "title": "Service law",
-        "detail": "Transfer, promotion, suspension, dismissal, seniority and reservation disputes of government employees; departmental inquiries."
-      },
-      {
-        "title": "Labour & industrial disputes",
-        "detail": "Retrenchment, reinstatement, wages, gratuity, provident fund, bonus and overtime; cases before Labour Courts and Industrial Tribunals."
-      },
-      {
-        "title": "Land & revenue",
-        "detail": "Mutation, correction of revenue records, partition before revenue courts, tenancy matters, land acquisition compensation, and proceedings before the Tehsildar, SDM and Collector."
-      },
-      {
-        "title": "Tax",
-        "detail": "Income tax, GST, and property and municipal tax disputes."
-      },
-      {
-        "title": "Banking & finance",
-        "detail": "Loan recovery before the Debts Recovery Tribunal, SARFAESI proceedings, NPA auctions, and guarantee and surety disputes."
-      },
-      {
-        "title": "Company & insolvency",
-        "detail": "Oppression and mismanagement, shareholder disputes, and Insolvency and Bankruptcy Code proceedings before the NCLT and NCLAT."
-      },
-      {
-        "title": "Election law",
-        "detail": "Election petitions for Parliament, Assembly, Panchayat and Municipal elections, disqualification and corrupt practices."
-      },
-      {
-        "title": "Environment",
-        "detail": "Air, water and noise pollution, forest and wildlife matters, and cases before the National Green Tribunal."
-      },
-      {
-        "title": "Cyber & IT law",
-        "detail": "IT contracts, data protection, and domain name and cybersquatting disputes."
-      },
-      {
-        "title": "NRI & cross-border matters",
-        "detail": "NRI matrimonial and child custody disputes, cross-border commercial disputes and international arbitration."
-      },
-      {
-        "title": "Arbitration, mediation & Lok Adalat",
-        "detail": "Arbitration and conciliation under the Arbitration and Conciliation Act, 1996, mediation under the Mediation Act, 2023, and settlement before Lok Adalats."
-      },
-      {
-        "title": "Right to Information",
-        "detail": "RTI applications, first appeals, and second appeals before the State or Central Information Commission."
-      },
-      {
-        "title": "Senior citizens",
-        "detail": "Maintenance and protection of property under the Maintenance and Welfare of Parents and Senior Citizens Act, 2007."
-      },
-      {
-        "title": "Government schemes & welfare",
-        "detail": "Pensions, certificates, scholarships and grievances before government departments."
-      },
-      {
-        "title": "Other disputes",
-        "detail": "Cooperative society disputes; trust, wakf and religious endowment disputes; civil and criminal defamation; and complaints of professional misconduct."
-      },
-      {
-        "title": "Legal awareness programmes",
-        "detail": "For schools, colleges, panchayats, self-help groups and NGOs."
-      }
+    "slug": "documentation-advisory",
+    "title": "Documentation & Advisory",
+    "group": "services",
+    "items": [
+      "Legal notices in Hindi and English",
+      "Drafting of plaints, complaints, written statements and replies",
+      "Agreements, affidavits and deeds",
+      "Pre-litigation consultation and opinions"
     ]
   },
   {
-    "slug": "legal-documentation",
-    "title": "Legal Documentation",
-    "topics": [
-      {
-        "title": "Agreements & deeds",
-        "detail": "Agreements to sell, rent and lease agreements, gift deeds, wills, relinquishment deeds, partnership deeds and powers of attorney."
-      },
-      {
-        "title": "Notices & affidavits",
-        "detail": "Legal notices and replies, affidavits and declarations."
-      },
-      {
-        "title": "Court documents",
-        "detail": "Plaints, written statements, petitions and applications."
-      },
-      {
-        "title": "Applications to authorities",
-        "detail": "Representations, complaints and applications to government departments."
-      }
+    "slug": "legal-aid-initiative",
+    "title": "Legal Aid Initiative (A S Godara Foundation Trust)",
+    "group": "services",
+    "items": [
+      "Free or concessional legal guidance for eligible persons",
+      "Awareness on citizens' rights and remedies",
+      "Assistance with applications to authorities and public offices"
+    ]
+  },
+  {
+    "slug": "marriage-matrimonial-services",
+    "title": "Marriage & Matrimonial Services",
+    "group": "services",
+    "items": [
+      "Court marriage and solemnisation assistance",
+      "Registration of marriage under the Hindu Marriage Act, 1955 and the Special Marriage Act, 1954",
+      "Notice and objection procedure under the Special Marriage Act for inter-faith and inter-caste marriages",
+      "Marriage certificate applications before the Registrar of Marriages, Charkhi Dadri",
+      "Protection petitions for couples before the Punjab & Haryana High Court",
+      "Affidavits for age, status and consent required at registration",
+      "Pre-nuptial and post-marital agreements, where legally enforceable",
+      "NRI marriage registration and documentation for overseas use",
+      "Nullity and void/voidable marriage petitions"
     ]
   }
 ]

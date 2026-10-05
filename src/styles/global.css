@@ -503,7 +503,7 @@ p {
   transition: border-color 0.25s ease;
 }
 .expertise-card:nth-child(n + 5) {
-  grid-column: span 4;
+  grid-column: span 3;
 }
 .expertise-card:hover,
 .expertise-card:focus-visible {
@@ -1451,9 +1451,6 @@ p {
   .expertise-card:nth-child(n + 5) {
     grid-column: auto;
   }
-  .expertise-card:last-child {
-    grid-column: 1 / -1;
-  }
 }
 
 @media (max-width: 900px) {
@@ -1868,4 +1865,43 @@ p {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.practice-detail {
+  padding-top: 28px;
+}
+.practice-list {
+  display: grid;
+  gap: 0;
+  margin: 24px 0 0;
+  padding-left: 24px;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.6;
+}
+.practice-list li {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 14px 19px 2px;
+}
+.practice-list li::marker {
+  color: var(--accent);
+}
+.urgent-panel .practice-list {
+  color: var(--paper);
+  font-size: 1.05rem;
+}
+.urgent-panel .practice-list li {
+  border-color: rgb(255 255 255 / 22%);
+}
+.area-grid article {
+  display: flex;
+  flex-direction: column;
+}
+.area-grid article .text-link {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 20px;
+}
+.work-item .text-link {
+  align-self: flex-start;
+  margin-top: 26px;
 }

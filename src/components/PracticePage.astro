@@ -1,12 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PhosphorIcon from './PhosphorIcon.astro';
 import {
   headerLabels,
   practicePath,
   type PracticeGroup,
   type PracticeItem
 } from '../lib/navigation';
-import { facts, type Locale } from '../lib/site';
+import { facts, urlFor, type Locale } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -22,13 +23,33 @@ const { locale, group, item } = Astro.props;
   page={group}
   path={practicePath(group, item.slug)}
   title={`${item.title} | ${facts.name}`}
-  description={`${item.title} page awaiting approved content.`}
+  description={`${item.title}: ${item.items.slice(0, 2).join('; ')}.`}
   noindex
 >
   <section class="inner-hero page-wrap practice-placeholder">
     <div>
       <p class="eyebrow">{headerLabels[locale][group]}</p>
       <h1 lang="en">{item.title}</h1>
+      {locale === 'hi' && <p class="inner-intro">विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।</p>}
+    </div>
+  </section>
+  <section class="section-pad page-wrap practice-detail">
+    <p class="eyebrow">{locale === 'hi' ? 'सूचीबद्ध कार्य' : 'Listed work'}</p>
+    <ul class="practice-list" lang="en">
+      {item.items.map((detail) => (
+        <li>{detail}</li>
+      ))}
+    </ul>
+    <div class="soft-note">
+      <p>
+        {locale === 'hi'
+          ? 'किसी विशेष मामले के लिए व्यक्तिगत सलाह आवश्यक है।'
+          : 'The details of an individual matter require individual advice.'}
+      </p>
+      <a class="text-link" href={urlFor('how-we-help', locale)}>
+        {locale === 'hi' ? 'सभी कार्य क्षेत्र देखें' : 'View all areas of work'}
+        <PhosphorIcon name="arrow-right" />
+      </a>
     </div>
   </section>
 </BaseLayout>

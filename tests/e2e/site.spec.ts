@@ -6,42 +6,42 @@ test('home is readable and stays within the viewport', async ({ page }, testInfo
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Find clarity');
   await expect(page.locator('.hero-actions .phosphor-icon svg').first()).toBeVisible();
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
-  expect(overflow).toBe(false);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
+    false
+  );
   await page.screenshot({ path: testInfo.outputPath('home-viewport.png') });
   await page.screenshot({ path: testInfo.outputPath('home.png'), fullPage: true });
 });
 
-test('Hindi home stays within the viewport', async ({ page }, testInfo) => {
+test('Hindi home presents the new scope without unreviewed bullet translations', async ({
+  page
+}, testInfo) => {
   await page.goto('/hi');
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('अगला कदम');
   await expect(page.getByRole('heading', { name: 'हमारी विशेषज्ञता' })).toBeVisible();
   await expect(page.locator('.expertise-card').first()).toHaveAttribute(
     'href',
-    '#expertise-matrimonial-family-disputes'
+    '#expertise-criminal-law'
   );
   await page.locator('.expertise-card').first().click();
-  await expect(page.locator('#expertise-matrimonial-family-disputes')).toBeVisible();
-  await expect(
-    page
-      .locator('#expertise-matrimonial-family-disputes')
-      .getByText('विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।')
-  ).toBeVisible();
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
-  expect(overflow).toBe(false);
+  const panel = page.locator('#expertise-criminal-law');
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText('विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।')).toBeVisible();
+  await expect(panel.locator('.expertise-topic-list')).toHaveAttribute('lang', 'en');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
+    false
+  );
   await page.screenshot({ path: testInfo.outputPath('hindi-home-viewport.png') });
 });
 
-test('expertise cards precede support and reveal the supplied topic lists', async ({
-  page
-}, testInfo) => {
+test('eight expertise cards reveal all firm-owner bullet lists', async ({ page }, testInfo) => {
   await page.goto('/');
   const section = page.locator('.expertise-section');
   const cards = section.locator('.expertise-card');
   await expect(section.getByRole('heading', { name: 'Our expertise' })).toBeVisible();
-  await expect(cards).toHaveCount(7);
-  await expect(cards.locator('img')).toHaveCount(7);
+  await expect(cards).toHaveCount(8);
+  await expect(cards.locator('img')).toHaveCount(8);
+  expect(expertiseOutline.reduce((total, item) => total + item.items.length, 0)).toBe(39);
   const sectionOrder = await page
     .locator('main > section')
     .evaluateAll((sections) => sections.map((element) => element.classList[0]));
@@ -60,64 +60,58 @@ test('expertise cards precede support and reveal the supplied topic lists', asyn
     await cards.nth(index).click();
     const panel = page.locator(`#expertise-${item.slug}`);
     await expect(panel).toBeVisible();
-    await expect(panel.locator('.expertise-topic-list li')).toHaveCount(item.topics.length);
+    await expect(panel.locator('.expertise-topic-list li')).toHaveCount(item.items.length);
     await expect(panel.getByRole('heading', { name: item.title })).toBeVisible();
+    await expect(panel.locator('.expertise-topic-list li')).toHaveText(item.items);
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
       false
     );
   }
-  const lastPanel = page.locator('#expertise-legal-documentation');
+  const lastPanel = page.locator('#expertise-marriage-matrimonial-services');
   await lastPanel.screenshot({ path: testInfo.outputPath('expertise-open-panel.png') });
   await lastPanel.getByRole('link', { name: 'Next' }).click();
-  await expect(page.locator('#expertise-matrimonial-family-disputes')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Divorce Lawyer' }).last()).toBeVisible();
+  await expect(page.locator('#expertise-criminal-law')).toBeVisible();
   await page.getByRole('link', { name: 'Close topics' }).click();
   await expect(page.locator('.expertise-panel:visible')).toHaveCount(0);
 });
 
-test('language switch keeps the page context', async ({ page }) => {
+test('language switch keeps page context', async ({ page }) => {
   await page.goto('/our-work');
   await page.getByRole('link', { name: 'हिंदी में पढ़ें' }).click();
   await expect(page).toHaveURL(/\/hi\/our-work\/?$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('पहला कदम');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('कार्य');
 });
 
-test('about page presents the supplied purpose, values, and Trust registration facts', async ({
-  page
-}, testInfo) => {
+test('about page uses current areas and legal aid bullets only', async ({ page }) => {
   await page.goto('/about');
   await expect(page.getByRole('heading', { name: 'Who we are' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Our mission' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Our vision' })).toBeVisible();
   await expect(page.locator('.values-grid > div')).toHaveCount(5);
-  await expect(page.getByText('Charkhi Dadri, Haryana', { exact: true })).toBeVisible();
-  await expect(page.locator('time[datetime="2024-02-22"]')).toHaveText('22.02.2024');
-  await expect(page.getByText('X0U2024B34')).toHaveCount(0);
-  await expect(page.getByText('113172533')).toHaveCount(0);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-    false
-  );
-  await page.screenshot({ path: testInfo.outputPath('about.png'), fullPage: true });
-
+  await expect(page.locator('.registration-details dd')).toHaveCount(3);
+  await expect(
+    page.getByText('Free or concessional legal guidance for eligible persons')
+  ).toBeVisible();
+  await expect(page.getByText('22.02.2024')).toHaveCount(0);
+  await expect(page.getByText('Consumer Disputes')).toHaveCount(0);
   await page.goto('/hi/about');
   await expect(page.getByRole('heading', { name: 'हम कौन हैं' })).toBeVisible();
-  await expect(page.locator('.values-grid > div')).toHaveCount(5);
-  await expect(page.locator('time[datetime="2024-02-22"]')).toHaveText('22.02.2024');
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
     false
   );
 });
 
-test('help page shows verified official routes and preparation guidance', async ({ page }) => {
+test('legal aid page lists only the supplied aid and documentation services', async ({ page }) => {
   await page.goto('/get-help');
-  await expect(page.getByRole('link', { name: /112/ })).toHaveAttribute('href', 'tel:112');
-  await expect(page.getByRole('link', { name: /15100/ })).toHaveAttribute('href', 'tel:15100');
-  await expect(page.getByRole('heading', { name: 'Before you seek help' })).toBeVisible();
+  await expect(page.locator('.urgent-panel .practice-list li')).toHaveCount(3);
+  await expect(page.locator('.preparation-panel .prepare-list li')).toHaveCount(4);
+  await expect(
+    page.getByText('Direct public contact details have not been provided yet.')
+  ).toBeVisible();
+  await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
   await expect(page.locator('form')).toHaveCount(0);
 });
 
-test('preview blocks indexing until the domain is verified', async ({ page }) => {
+test('preview blocks indexing until domain and copy are verified', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
   const response = await page.request.get('/robots.txt');
@@ -125,27 +119,26 @@ test('preview blocks indexing until the domain is verified', async ({ page }) =>
   expect(await response.text()).toContain('Disallow: /');
 });
 
-test('work and help pages fit the viewport', async ({ page }, testInfo) => {
-  for (const route of ['our-work', 'get-help']) {
+test('areas, work and legal aid pages fit the viewport', async ({ page }, testInfo) => {
+  for (const route of ['how-we-help', 'our-work', 'get-help']) {
     await page.goto(`/${route}`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth > innerWidth + 1
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
+      false
     );
-    expect(overflow).toBe(false);
     await page.screenshot({ path: testInfo.outputPath(`${route}.png`), fullPage: true });
   }
 });
 
-test('desktop dropdowns show every requested option', async ({ page }, testInfo) => {
+test('desktop dropdowns contain only current areas', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop dropdown check');
   await page.goto('/');
   const expertise = page.locator('.nav-dropdown-expertise');
   await expertise.locator('summary').click();
-  await expect(expertise.locator('.nav-dropdown-panel a')).toHaveCount(10);
-  await expect(expertise.getByRole('link', { name: 'Bail Matters Lawyer' })).toHaveAttribute(
+  await expect(expertise.locator('.nav-dropdown-panel a')).toHaveCount(5);
+  await expect(expertise.getByRole('link', { name: 'Criminal Law' })).toHaveAttribute(
     'href',
-    '/expertise/bail-matters-lawyer'
+    '/expertise/criminal-law'
   );
   await page.screenshot({ path: testInfo.outputPath('desktop-expertise.png') });
   await page.keyboard.press('Escape');
@@ -153,25 +146,25 @@ test('desktop dropdowns show every requested option', async ({ page }, testInfo)
 
   const services = page.locator('.nav-dropdown-services');
   await services.locator('summary').click();
-  await expect(services.locator('.nav-dropdown-panel a')).toHaveCount(10);
+  await expect(services.locator('.nav-dropdown-panel a')).toHaveCount(3);
   await page.screenshot({ path: testInfo.outputPath('desktop-services.png') });
-  await services.getByRole('link', { name: 'Court Marriage Registration' }).click();
-  await expect(page).toHaveURL(/\/services\/court-marriage-registration\/?$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Court Marriage Registration');
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
+  await services.getByRole('link', { name: 'Marriage & Matrimonial Services' }).click();
+  await expect(page).toHaveURL(/\/services\/marriage-matrimonial-services\/?$/);
+  await expect(page.locator('.practice-list li')).toHaveCount(9);
 });
 
-test('mobile dropdown reaches an expertise page', async ({ page }, testInfo) => {
+test('mobile dropdown reaches the new criminal law page', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'mobile navigation check');
   await page.goto('/');
   await page.locator('.mobile-menu > summary').click();
   const expertise = page.locator('.mobile-dropdown').first();
   await expertise.locator('summary').click();
-  await expect(expertise.locator('.mobile-dropdown-panel a')).toHaveCount(10);
+  await expect(expertise.locator('.mobile-dropdown-panel a')).toHaveCount(5);
   await page.screenshot({ path: testInfo.outputPath('mobile-expertise.png') });
-  await expertise.getByRole('link', { name: 'Divorce Lawyer' }).click();
-  await expect(page).toHaveURL(/\/expertise\/divorce-lawyer\/?$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Divorce Lawyer');
+  await expertise.getByRole('link', { name: 'Criminal Law' }).click();
+  await expect(page).toHaveURL(/\/expertise\/criminal-law\/?$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Criminal Law');
+  await expect(page.locator('.practice-list li')).toHaveCount(5);
 });
 
 test('header fits a mid-sized desktop viewport', async ({ page }, testInfo) => {
@@ -186,7 +179,7 @@ test('header fits a mid-sized desktop viewport', async ({ page }, testInfo) => {
   await page.screenshot({ path: testInfo.outputPath('desktop-1024-services.png') });
 });
 
-test('all expertise and service pages are available in both languages', async ({
+test('current detail pages exist in both languages and retired routes are gone', async ({
   request
 }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'one route audit is sufficient');
@@ -196,14 +189,22 @@ test('all expertise and service pages are available in both languages', async ({
         const response = await request.get(`${prefix}/${group}/${item.slug}`);
         expect(response.ok(), `${prefix}/${group}/${item.slug}`).toBe(true);
         const html = await response.text();
-        expect(html).toContain(`<h1 lang="en">${item.title}</h1>`);
+        expect(html).toContain(`<h1 lang="en">${item.title.replaceAll('&', '&amp;')}</h1>`);
+        expect(html).toContain(item.items[0]);
         expect(html).toContain('noindex,nofollow');
       }
     }
   }
+  for (const oldPath of ['/expertise/supreme-court-lawyer', '/services/consumer-disputes-lawyer']) {
+    expect((await request.get(oldPath)).status()).toBe(404);
+  }
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  expect(sitemap).toContain('/expertise/criminal-law');
+  expect(sitemap).toContain('/services/marriage-matrimonial-services');
+  expect(sitemap).not.toContain('/expertise/supreme-court-lawyer');
 });
 
-test('contact and appointment links state their preview status', async ({ page }) => {
+test('contact and appointment routes state their preview status', async ({ page }) => {
   await page.goto('/contact');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contact us');
   await page.goto('/book-appointment');

@@ -1,16 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 import heroImage from '../assets/hero-still-life.png';
-import matrimonialImage from '../assets/expertise/matrimonial-lawyer.png';
-import familyDisputesImage from '../assets/expertise/family-disputes-lawyer.png';
-import chequeBounceImage from '../assets/expertise/cheque-bounce-lawyer.png';
-import civilImage from '../assets/expertise/civil-lawyer.png';
 import criminalImage from '../assets/expertise/criminal-lawyer.png';
-import supremeCourtImage from '../assets/expertise/supreme-court-lawyer.png';
-import corporateImage from '../assets/expertise/corporate-lawyer.png';
-import expertiseOutline from '../content/expertise.json';
+import familyImage from '../assets/expertise/family-disputes-lawyer.png';
+import civilImage from '../assets/expertise/civil-lawyer.png';
+import bankingImage from '../assets/expertise/cheque-bounce-lawyer.png';
+import serviceImage from '../assets/expertise/corporate-lawyer.png';
+
+import aidImage from '../assets/expertise/divorce-lawyer.png';
+import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { localizedPath, practiceGroups, practicePath, type PracticeGroup } from '../lib/navigation';
+import { localizedPath, practicePath, workAreas } from '../lib/navigation';
 import PhosphorIcon from './PhosphorIcon.astro';
 import { copy, facts, urlFor, type Locale } from '../lib/site';
 
@@ -20,102 +20,22 @@ interface Props {
 const { locale } = Astro.props;
 const t = copy[locale];
 const h = t.home;
-const expertiseMedia = [
-  {
-    image: familyDisputesImage,
-    icon: 'users-three',
-    titleHi: 'वैवाहिक एवं पारिवारिक विवाद',
-    summary: {
-      en: 'Marriage, separation, children and family rights.',
-      hi: 'विवाह, अलगाव, बच्चों और पारिवारिक अधिकारों से जुड़े विषय।'
-    },
-    related: [
-      { group: 'expertise', slug: 'divorce-lawyer' },
-      { group: 'expertise', slug: 'domestic-violence-lawyer' },
-      { group: 'expertise', slug: 'matrimonial-lawyer' },
-      { group: 'expertise', slug: 'family-disputes-lawyer' }
-    ]
-  },
-  {
-    image: matrimonialImage,
-    icon: 'handshake',
-    titleHi: 'विवाह पंजीकरण',
-    summary: {
-      en: 'Court marriage, registration and relationship documents.',
-      hi: 'कोर्ट मैरिज, पंजीकरण और संबंधित दस्तावेज़।'
-    },
-    related: [{ group: 'services', slug: 'court-marriage-registration' }]
-  },
-  {
-    image: criminalImage,
-    icon: 'gavel',
-    titleHi: 'आपराधिक मामले',
-    summary: {
-      en: 'Complaints, bail, investigation, trial and appeals.',
-      hi: 'शिकायत, ज़मानत, जाँच, सुनवाई और अपील।'
-    },
-    related: [
-      { group: 'expertise', slug: 'criminal-lawyer' },
-      { group: 'expertise', slug: 'bail-matters-lawyer' },
-      { group: 'expertise', slug: 'cheque-bounce-lawyer' }
-    ]
-  },
-  {
-    image: civilImage,
-    icon: 'scales',
-    titleHi: 'दीवानी मामले',
-    summary: {
-      en: 'Property, succession, contracts and civil remedies.',
-      hi: 'संपत्ति, उत्तराधिकार, अनुबंध और दीवानी उपाय।'
-    },
-    related: [
-      { group: 'expertise', slug: 'civil-lawyer' },
-      { group: 'services', slug: 'property-lawyer' }
-    ]
-  },
-  {
-    image: chequeBounceImage,
-    icon: 'receipt',
-    titleHi: 'उपभोक्ता विवाद',
-    summary: {
-      en: 'Goods, services, refunds and consumer forums.',
-      hi: 'वस्तुओं, सेवाओं, रिफंड और उपभोक्ता मंचों से जुड़े विषय।'
-    },
-    related: [{ group: 'services', slug: 'consumer-disputes-lawyer' }]
-  },
-  {
-    image: supremeCourtImage,
-    icon: 'bank',
-    titleHi: 'कानून के अन्य क्षेत्र',
-    summary: {
-      en: 'Constitutional, service, labour and other matters.',
-      hi: 'संवैधानिक, सेवा, श्रम और अन्य मामले।'
-    },
-    related: [
-      { group: 'expertise', slug: 'supreme-court-lawyer' },
-      { group: 'expertise', slug: 'corporate-lawyer' },
-      { group: 'services', slug: 'delhi-high-court-lawyer' },
-      { group: 'services', slug: 'debt-recovery-tribunal-lawyer' }
-    ]
-  },
-  {
-    image: corporateImage,
-    icon: 'briefcase',
-    titleHi: 'कानूनी दस्तावेज़',
-    summary: {
-      en: 'Agreements, notices, court papers and applications.',
-      hi: 'समझौते, नोटिस, अदालती कागज़ात और आवेदन।'
-    },
-    related: [{ group: 'services', slug: 'legal-documentation' }]
-  }
-] as const;
-const expertiseCards = expertiseOutline.map((item, index) => ({
-  ...item,
-  ...expertiseMedia[index]
+const expertiseMedia = {
+  'criminal-law': { image: criminalImage, icon: 'gavel' },
+  'family-matrimonial-law': { image: familyImage, icon: 'users-three' },
+  'civil-law': { image: civilImage, icon: 'scales' },
+  'banking-debt-recovery': { image: bankingImage, icon: 'bank' },
+  'service-education-law': { image: serviceImage, icon: 'briefcase' },
+  'documentation-advisory': { image: heroImage, icon: 'receipt' },
+  'legal-aid-initiative': { image: aidImage, icon: 'handshake' },
+  'marriage-matrimonial-services': { image: marriageImage, icon: 'heart-break' }
+} as const;
+const expertiseCards = workAreas.map((card) => ({
+  ...card,
+  ...expertiseMedia[card.slug as keyof typeof expertiseMedia]
 }));
-function relatedTitle(group: PracticeGroup, slug: string) {
-  return practiceGroups[group].find((item) => item.slug === slug)?.title ?? slug;
-}
+const supportAreas = [workAreas[0], workAreas[1], workAreas[5], workAreas[6]];
+const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
 ---
 
 <BaseLayout locale={locale} page="home" title={h.title} description={h.description}>
@@ -136,7 +56,7 @@ function relatedTitle(group: PracticeGroup, slug: string) {
       </div>
       <div class="hero-signature">
         <span class="signature-line" aria-hidden="true"></span>
-        <span>{t.initiative}</span>
+        <span lang={locale === 'hi' ? 'en' : undefined}>{t.initiative}</span>
       </div>
     </div>
     <figure class="hero-visual">
@@ -176,13 +96,13 @@ function relatedTitle(group: PracticeGroup, slug: string) {
   <section class="expertise-section section-pad page-wrap" aria-labelledby="expertise-title">
     <div class="expertise-heading">
       <div>
-        <p class="eyebrow">{locale === 'hi' ? 'कानूनी क्षेत्र' : 'Legal areas'}</p>
+        <p class="eyebrow">{locale === 'hi' ? 'कानूनी क्षेत्र' : 'Areas of work'}</p>
         <h2 id="expertise-title">{locale === 'hi' ? 'हमारी विशेषज्ञता' : 'Our expertise'}</h2>
       </div>
       <p>
         {locale === 'hi'
-          ? 'किसी कार्ड को खोलकर उससे जुड़े कानूनी विषय देखें।'
-          : 'Open a card to explore the topics in that legal area.'}
+          ? 'किसी कार्ड को खोलकर उससे जुड़े कार्य देखें।'
+          : 'Open a card to see the work listed in that area.'}
       </p>
     </div>
     <div class="expertise-grid">
@@ -202,12 +122,10 @@ function relatedTitle(group: PracticeGroup, slug: string) {
             <span class="expertise-card-icon">
               <PhosphorIcon name={card.icon} />
             </span>
-            <h3 lang={locale === 'hi' ? undefined : 'en'}>
-              {locale === 'hi' ? card.titleHi : card.title}
-            </h3>
-            <p>{card.summary[locale]}</p>
+            <h3 lang="en">{card.title}</h3>
+            <p lang="en">{card.items[0]}</p>
             <span class="expertise-card-link">
-              {card.topics.length} {locale === 'hi' ? 'विषय देखें' : 'topics · Open card'}
+              {card.items.length} {locale === 'hi' ? 'विषय देखें' : 'topics · Open card'}
               <PhosphorIcon name="arrow-right" />
             </span>
           </div>
@@ -225,11 +143,11 @@ function relatedTitle(group: PracticeGroup, slug: string) {
           <div class="expertise-panel-head">
             <div>
               <p class="eyebrow">
-                {locale === 'hi' ? 'कानूनी क्षेत्र' : 'Legal area'} {index + 1} /{' '}
+                {locale === 'hi' ? 'कार्य क्षेत्र' : 'Area of work'} {index + 1} /{' '}
                 {expertiseCards.length}
               </p>
-              <h3 id={`expertise-panel-title-${card.slug}`}>
-                {locale === 'hi' ? card.titleHi : card.title}
+              <h3 id={`expertise-panel-title-${card.slug}`} lang="en">
+                {card.title}
               </h3>
             </div>
             <a
@@ -244,30 +162,24 @@ function relatedTitle(group: PracticeGroup, slug: string) {
             <p class="expertise-language-note">विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।</p>
           )}
           <ul class="expertise-topic-list" lang="en">
-            {card.topics.map((topic) => (
+            {card.items.map((item) => (
               <li>
-                <strong>{topic.title}</strong>
-                <p>{topic.detail}</p>
+                <strong>{item}</strong>
               </li>
             ))}
           </ul>
           <div class="expertise-related">
-            <h4>{locale === 'hi' ? 'संबंधित पेज' : 'Related pages'}</h4>
+            <h4>{locale === 'hi' ? 'विस्तृत पेज' : 'Detailed page'}</h4>
             <div>
-              {card.related.map((link) => (
-                <a
-                  href={localizedPath(practicePath(link.group, link.slug), locale)}
-                  lang={locale === 'hi' ? 'en' : undefined}
-                >
-                  {relatedTitle(link.group, link.slug)}
-                  <PhosphorIcon name="arrow-up-right" />
-                </a>
-              ))}
+              <a href={localizedPath(practicePath(card.group, card.slug), locale)} lang="en">
+                {card.title}
+                <PhosphorIcon name="arrow-up-right" />
+              </a>
             </div>
           </div>
           <div class="expertise-panel-foot">
             <p>{t.generalNotice}</p>
-            <nav aria-label={locale === 'hi' ? 'कानूनी क्षेत्र बदलें' : 'Browse legal areas'}>
+            <nav aria-label={locale === 'hi' ? 'कानूनी क्षेत्र बदलें' : 'Browse areas of work'}>
               <a
                 href={`#expertise-${expertiseCards[(index + expertiseCards.length - 1) % expertiseCards.length].slug}`}
               >
@@ -283,7 +195,6 @@ function relatedTitle(group: PracticeGroup, slug: string) {
       ))}
     </div>
   </section>
-
   <section class="support-section section-pad page-wrap" id="support">
     <div class="section-heading">
       <p class="eyebrow">{locale === 'hi' ? 'हमारी सहायता' : 'What we do'}</p>
@@ -292,9 +203,12 @@ function relatedTitle(group: PracticeGroup, slug: string) {
     </div>
     <div class="support-grid">
       {h.services.map((service, i) => (
-        <a class={`support-card support-card-${i + 1}`} href={urlFor('how-we-help', locale)}>
+        <a
+          class={`support-card support-card-${i + 1}`}
+          href={localizedPath(practicePath(supportAreas[i].group, supportAreas[i].slug), locale)}
+        >
           <span class="card-number">{service.number}</span>
-          <div>
+          <div lang={locale === 'hi' ? 'en' : undefined}>
             <h3>{service.title}</h3>
             <p>{service.text}</p>
           </div>
@@ -319,7 +233,7 @@ function relatedTitle(group: PracticeGroup, slug: string) {
         {h.steps.map((step, i) => (
           <article class="approach-step">
             <span>0{i + 1}</span>
-            <div>
+            <div lang={locale === 'hi' ? 'en' : undefined}>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
             </div>
@@ -331,14 +245,16 @@ function relatedTitle(group: PracticeGroup, slug: string) {
 
   <section class="topics-section section-pad page-wrap">
     <div class="topics-title">
-      <p class="eyebrow">{locale === 'hi' ? 'सामान्य मुद्दे' : 'Common concerns'}</p>
+      <p class="eyebrow">{locale === 'hi' ? 'चुनिंदा क्षेत्र' : 'Selected areas'}</p>
       <h2 data-text-reveal>{h.topicsTitle}</h2>
     </div>
     <div class="topic-list">
       {h.topics.map((topic, i) => (
-        <a href={urlFor('how-we-help', locale)}>
+        <a
+          href={localizedPath(practicePath(featuredAreas[i].group, featuredAreas[i].slug), locale)}
+        >
           <span>0{i + 1}</span>
-          <strong>{topic}</strong>
+          <strong lang={locale === 'hi' ? 'en' : undefined}>{topic}</strong>
           <PhosphorIcon name="arrow-up-right" />
         </a>
       ))}
@@ -374,7 +290,7 @@ function relatedTitle(group: PracticeGroup, slug: string) {
       <p class="eyebrow">{locale === 'hi' ? 'सवाल-जवाब' : 'Good to know'}</p>
       <h2>{t.faq.heading}</h2>
     </div>
-    <div class="faq-list">
+    <div class="faq-list" lang={locale === 'hi' ? 'en' : undefined}>
       {t.faq.items.slice(0, 3).map((item) => (
         <details>
           <summary>
@@ -396,7 +312,7 @@ function relatedTitle(group: PracticeGroup, slug: string) {
       <p class="eyebrow">{facts.name}</p>
       <h2>{h.ctaTitle}</h2>
       <p>{h.ctaText}</p>
-      <a class="button button-light" href={urlFor('get-help', locale)}>
+      <a class="button button-light" href={urlFor('how-we-help', locale)}>
         {h.ctaButton}
         <PhosphorIcon name="arrow-up-right" />
       </a>

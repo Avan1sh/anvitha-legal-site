@@ -14,11 +14,11 @@ const isContact = kind === 'contact';
 const label = isContact ? headerLabels[locale].contact : headerLabels[locale].appointment;
 const intro = isContact
   ? locale === 'hi'
-    ? 'इस पहल के सीधे फोन, ईमेल और कार्यालय विवरण की पुष्टि की जा रही है। आधिकारिक सहायता के विकल्प नीचे दिए लिंक पर देखें।'
-    : 'Direct phone, email, and office details are being confirmed. You can find official help routes at the link below.'
+    ? 'सीधे सार्वजनिक फोन, ईमेल और कार्यालय विवरण अभी उपलब्ध नहीं कराए गए हैं।'
+    : 'Direct public phone, email and office details have not been provided yet.'
   : locale === 'hi'
-    ? 'इस प्रीव्यू पर अभी अपॉइंटमेंट बुकिंग उपलब्ध नहीं है। पुष्टि किए गए संपर्क विवरण और उपलब्ध समय बाद में जोड़े जाएँगे।'
-    : 'Appointment booking is not available through this preview yet. Verified contact details and availability will be added later.';
+    ? 'इस प्रीव्यू में अपॉइंटमेंट बुकिंग उपलब्ध नहीं है।'
+    : 'Appointment booking is not available through this preview.';
 ---
 
 <BaseLayout
@@ -34,8 +34,8 @@ const intro = isContact
       <p class="eyebrow">{label}</p>
       <h1>{label}</h1>
       <p class="inner-intro">{intro}</p>
-      <a class="text-link status-link" href={urlFor('get-help', locale)}>
-        {locale === 'hi' ? 'आधिकारिक सहायता देखें' : 'Find official help'}
+      <a class="text-link status-link" href={urlFor('how-we-help', locale)}>
+        {locale === 'hi' ? 'कार्य क्षेत्र देखें' : 'View areas of work'}
         <PhosphorIcon name="arrow-right" />
       </a>
     </div>

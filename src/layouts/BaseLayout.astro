@@ -202,7 +202,7 @@ const indexEnabled = indexingEnabled(Astro.site);
         <div>
           <p class="footer-kicker">{facts.name}</p>
           <h2>{t.footerLead}</h2>
-          <a class="button button-light" href={urlFor('get-help', locale)}>
+          <a class="button button-light" href={urlFor('how-we-help', locale)}>
             {t.footerAction}
             <PhosphorIcon name="arrow-up-right" />
           </a>
@@ -226,7 +226,7 @@ const indexEnabled = indexingEnabled(Astro.site);
         <p>{t.initiative}</p>
         <p>{t.footerLegal}</p>
         <p>
-          © {new Date().getFullYear()} {facts.trust}
+          © {new Date().getFullYear()} {facts.name}
         </p>
       </div>
     </footer>
