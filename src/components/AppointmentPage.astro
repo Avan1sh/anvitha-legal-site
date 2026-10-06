@@ -7,15 +7,16 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const brand = locale === 'hi' ? 'अन्विता लीगल' : facts.name;
 ---
 
 <BaseLayout
   locale={locale}
   page="book-appointment"
-  title={`${locale === 'hi' ? 'अपॉइंटमेंट बुक करें' : 'Book an appointment'} | ${facts.name}`}
+  title={`${locale === 'hi' ? 'अपॉइंटमेंट बुक करें' : 'Book an appointment'} | ${brand}`}
   description={
     locale === 'hi'
-      ? 'Anvitha Legal अपॉइंटमेंट पेज का पूर्वावलोकन।'
+      ? 'अन्विता लीगल के अपॉइंटमेंट पेज का पूर्वावलोकन।'
       : 'Preview the Anvitha Legal appointment page.'
   }
   noindex

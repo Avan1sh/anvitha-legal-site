@@ -13,6 +13,7 @@ import ContactForm from './ContactForm.astro';
 import PhosphorIcon from './PhosphorIcon.astro';
 import {
   headerLabels,
+  localizePractice,
   practicePath,
   type PracticeGroup,
   type PracticeItem
@@ -26,6 +27,7 @@ interface Props {
 }
 
 const { locale, group, item } = Astro.props;
+const content = localizePractice(item, locale);
 const practiceImages = {
   'criminal-law': criminalImage,
   'family-matrimonial-law': familyImage,
@@ -43,15 +45,14 @@ const practiceImage = practiceImages[item.slug as keyof typeof practiceImages];
   locale={locale}
   page={group}
   path={practicePath(group, item.slug)}
-  title={`${item.title} | ${facts.name}`}
-  description={`${item.title}: ${item.items.slice(0, 2).join('; ')}.`}
+  title={`${content.title} | ${locale === 'hi' ? 'अन्विता लीगल' : facts.name}`}
+  description={`${content.title}: ${content.items.slice(0, 2).join('; ')}.`}
   noindex
 >
   <section class="inner-hero page-wrap practice-placeholder">
     <div>
       <p class="eyebrow">{headerLabels[locale][group]}</p>
-      <h1 lang="en">{item.title}</h1>
-      {locale === 'hi' && <p class="inner-intro">विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।</p>}
+      <h1>{content.title}</h1>
     </div>
   </section>
   <section class="section-pad page-wrap practice-detail practice-detail-grid">
@@ -67,8 +68,8 @@ const practiceImage = practiceImages[item.slug as keyof typeof practiceImages];
         />
       )}
       <p class="eyebrow">{locale === 'hi' ? 'सूचीबद्ध कार्य' : 'Listed work'}</p>
-      <ul class="practice-list" lang="en">
-        {item.items.map((detail) => (
+      <ul class="practice-list">
+        {content.items.map((detail) => (
           <li>{detail}</li>
         ))}
       </ul>

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PhosphorIcon from './PhosphorIcon.astro';
-import { localizedPath, practicePath, workAreas } from '../lib/navigation';
+import { localizedPath, practicePath, workAreasFor } from '../lib/navigation';
 import { copy, facts, urlFor, type Locale, type PageKey } from '../lib/site';
 
 interface Props {
@@ -24,13 +24,14 @@ const info =
             : page === 'privacy'
               ? t.privacy
               : t.disclaimer;
-const eyebrow = 'eyebrow' in info ? info.eyebrow : facts.name;
+const eyebrow = 'eyebrow' in info ? info.eyebrow : locale === 'hi' ? 'अन्विता लीगल' : facts.name;
 const heading = 'heading' in info ? info.heading : '';
 const intro = 'intro' in info ? info.intro : '';
 const sections = 'sections' in info ? info.sections : [];
 const isLegal = page === 'privacy' || page === 'disclaimer';
-const aidArea = workAreas.find((item) => item.slug === 'legal-aid-initiative')!;
-const documentationArea = workAreas.find((item) => item.slug === 'documentation-advisory')!;
+const areas = workAreasFor(locale);
+const aidArea = areas.find((item) => item.slug === 'legal-aid-initiative')!;
+const documentationArea = areas.find((item) => item.slug === 'documentation-advisory')!;
 ---
 
 <BaseLayout locale={locale} page={page} title={info.title} description={info.description}>
@@ -50,12 +51,12 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
       <section class="editorial-section section-pad page-wrap">
         <div class="about-who-grid">
           <h2>{t.about.who.title}</h2>
-          <div lang={locale === 'hi' ? 'en' : undefined}>
+          <div>
             <p>{t.about.who.text}</p>
             <p>{t.about.who.name}</p>
           </div>
         </div>
-        <div class="editorial-grid about-purpose-grid" lang={locale === 'hi' ? 'en' : undefined}>
+        <div class="editorial-grid about-purpose-grid">
           {t.about.sections.map((item) => (
             <article>
               <h3>{item.title}</h3>
@@ -67,7 +68,7 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
       <section class="principles-band">
         <div class="page-wrap">
           <p class="eyebrow">{locale === 'hi' ? 'कानूनी क्षेत्र' : 'Areas of law'}</p>
-          <dl class="values-grid" lang={locale === 'hi' ? 'en' : undefined}>
+          <dl class="values-grid">
             {t.about.principles.map((item) => (
               <div>
                 <dt>{item.title}</dt>
@@ -79,14 +80,14 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
       </section>
       <section class="trust-section section-pad page-wrap">
         <div>
-          <p class="eyebrow">{facts.trust}</p>
+          <p class="eyebrow">{locale === 'hi' ? t.about.trust.text : facts.trust}</p>
           <h2>{t.about.trust.title}</h2>
         </div>
         <div class="trust-body">
-          <p lang="en">{t.about.trust.text}</p>
+          <p>{t.about.trust.text}</p>
           <div class="registration-details">
             <h3>{locale === 'hi' ? 'सूचीबद्ध सहायता' : 'Listed support'}</h3>
-            <dl lang="en">
+            <dl>
               {t.about.trust.items.map((item, index) => (
                 <div>
                   <dt>0{index + 1}</dt>
@@ -106,11 +107,11 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
         <h2>{locale === 'hi' ? 'वर्तमान कार्य क्षेत्र' : 'Current areas of work'}</h2>
       </div>
       <div class="area-grid">
-        {workAreas.map((item, i) => (
+        {areas.map((item, i) => (
           <article>
             <span>0{i + 1}</span>
-            <h3 lang="en">{item.title}</h3>
-            <p lang="en">{item.items[0]}</p>
+            <h3>{item.title}</h3>
+            <p>{item.items[0]}</p>
             <a class="text-link" href={localizedPath(practicePath(item.group, item.slug), locale)}>
               {locale === 'hi' ? 'विवरण देखें' : 'View details'}
               <PhosphorIcon name="arrow-up-right" />
@@ -127,11 +128,11 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
   {page === 'our-work' && (
     <section class="section-pad page-wrap">
       <div class="work-grid">
-        {workAreas.map((item, i) => (
+        {areas.map((item, i) => (
           <article class:list={['work-item', { 'work-item-featured': i === 0 }]}>
             <span class="card-number">0{i + 1}</span>
-            <h2 lang="en">{item.title}</h2>
-            <p lang="en">{item.items.slice(0, 2).join('; ')}</p>
+            <h2>{item.title}</h2>
+            <p>{item.items.slice(0, 2).join('; ')}</p>
             <a class="text-link" href={localizedPath(practicePath(item.group, item.slug), locale)}>
               {locale === 'hi' ? 'विवरण देखें' : 'View details'}
               <PhosphorIcon name="arrow-up-right" />
@@ -148,7 +149,7 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
       <div>
         <div class="urgent-panel">
           <h2>{t.contact.aidTitle}</h2>
-          <ul class="practice-list" lang="en">
+          <ul class="practice-list">
             {aidArea.items.map((item) => (
               <li>{item}</li>
             ))}
@@ -175,7 +176,7 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
       <div class="preparation-panel">
         <p class="eyebrow">{locale === 'hi' ? 'सेवाएँ' : 'Services'}</p>
         <h2>{t.contact.documentationTitle}</h2>
-        <ol class="prepare-list" lang="en">
+        <ol class="prepare-list">
           {documentationArea.items.map((item, i) => (
             <li>
               <span>0{i + 1}</span>
@@ -199,7 +200,7 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
 
   {page === 'faq' && (
     <section class="section-pad page-wrap faq-page">
-      <div class="faq-list" lang={locale === 'hi' ? 'en' : undefined}>
+      <div class="faq-list">
         {t.faq.items.map((item) => (
           <details>
             <summary>
@@ -215,7 +216,7 @@ const documentationArea = workAreas.find((item) => item.slug === 'documentation-
 
   {isLegal && (
     <section class="section-pad page-wrap legal-page">
-      <div class="legal-grid" lang={locale === 'hi' ? 'en' : undefined}>
+      <div class="legal-grid">
         {sections.map((item) => (
           <section>
             <h2>{item.title}</h2>

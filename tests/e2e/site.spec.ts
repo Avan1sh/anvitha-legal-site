@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import expertiseOutline from '../../src/content/expertise.json' with { type: 'json' };
+import hindiOutline from '../../src/content/expertise.hi.json' with { type: 'json' };
 import { practiceGroups, type PracticeGroup } from '../../src/lib/navigation';
 
 test('home is readable and stays within the viewport', async ({ page }, testInfo) => {
@@ -15,21 +16,26 @@ test('home is readable and stays within the viewport', async ({ page }, testInfo
   await page.screenshot({ path: testInfo.outputPath('home.png'), fullPage: true });
 });
 
-test('Hindi home presents the new scope without unreviewed bullet translations', async ({
-  page
-}, testInfo) => {
-  await page.goto('/hi');
+test('Hindi button translates the full homepage', async ({ page }, testInfo) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'हिंदी में पढ़ें' }).click();
+  await expect(page).toHaveURL(/\/hi\/?$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'hi');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('अगले कदम से पहले');
   await expect(page.getByRole('heading', { name: 'हमारी विशेषज्ञता' })).toBeVisible();
-  await expect(page.locator('.expertise-card').first()).toHaveAttribute(
-    'href',
-    '#expertise-criminal-law'
-  );
+  await expect(page.locator('.expertise-card h3').first()).toHaveText('आपराधिक कानून');
+  await expect(page.locator('.support-card h3').first()).toHaveText('आपराधिक कानून');
+  await expect(page.locator('.faq-teaser summary').first()).toContainText('आपराधिक कानून');
+  await expect(page.locator('.appointment-section h2')).toHaveText('अपॉइंटमेंट बुक करें');
+
   await page.locator('.expertise-card').first().click();
   const panel = page.locator('#expertise-criminal-law');
   await expect(panel).toBeVisible();
-  await expect(panel.getByText('विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।')).toBeVisible();
-  await expect(panel.locator('.expertise-topic-list')).toHaveAttribute('lang', 'en');
+  await expect(panel.getByRole('heading', { name: 'आपराधिक कानून' })).toBeVisible();
+  await expect(panel.locator('.expertise-topic-list li').first()).toContainText(
+    hindiOutline[0].items[0]
+  );
+  await expect(panel.getByText('विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।')).toHaveCount(0);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
@@ -37,7 +43,6 @@ test('Hindi home presents the new scope without unreviewed bullet translations',
   ).toBe(false);
   await page.screenshot({ path: testInfo.outputPath('hindi-home-viewport.png') });
 });
-
 test('eight expertise cards reveal all firm-owner bullet lists', async ({ page }, testInfo) => {
   await page.goto('/');
   const section = page.locator('.expertise-section');
@@ -191,22 +196,40 @@ test('header fits a mid-sized desktop viewport', async ({ page }, testInfo) => {
   await page.screenshot({ path: testInfo.outputPath('desktop-1024-services.png') });
 });
 
-test('current detail pages exist in both languages and retired routes are gone', async ({
+test('all practice translations preserve the owner-supplied scope', async ({
   request
 }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'one route audit is sufficient');
+  expect(hindiOutline).toHaveLength(expertiseOutline.length);
+
   for (const group of ['expertise', 'services'] as PracticeGroup[]) {
     for (const item of practiceGroups[group]) {
-      for (const prefix of ['', '/hi']) {
-        const response = await request.get(`${prefix}/${group}/${item.slug}`);
-        expect(response.ok(), `${prefix}/${group}/${item.slug}`).toBe(true);
-        const html = await response.text();
-        expect(html).toContain(`<h1 lang="en">${item.title.replaceAll('&', '&amp;')}</h1>`);
-        expect(html).toContain(item.items[0]);
-        expect(html).toContain('noindex,nofollow');
+      const translated = hindiOutline.find((area) => area.slug === item.slug);
+      expect(translated, item.slug).toBeDefined();
+      expect(translated!.group).toBe(item.group);
+      expect(translated!.title).not.toBe(item.title);
+      expect(translated!.items).toHaveLength(item.items.length);
+
+      const englishResponse = await request.get(`/${group}/${item.slug}`);
+      expect(englishResponse.ok()).toBe(true);
+      const englishHtml = await englishResponse.text();
+      expect(englishHtml).toContain(`<h1>${item.title.replaceAll('&', '&amp;')}</h1>`);
+      expect(englishHtml).toContain(item.items[0]);
+
+      const hindiResponse = await request.get(`/hi/${group}/${item.slug}`);
+      expect(hindiResponse.ok()).toBe(true);
+      const hindiHtml = await hindiResponse.text();
+      expect(hindiHtml).toContain('<html id="page-scroll-root" lang="hi">');
+      expect(hindiHtml).toContain(`<h1>${translated!.title}</h1>`);
+      for (const [index, bullet] of translated!.items.entries()) {
+        expect(bullet).not.toBe(item.items[index]);
+        expect(hindiHtml).toContain(bullet);
       }
+      expect(hindiHtml).not.toContain('विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।');
+      expect(hindiHtml).toContain('noindex,nofollow');
     }
   }
+
   for (const oldPath of ['/expertise/supreme-court-lawyer', '/services/consumer-disputes-lawyer']) {
     expect((await request.get(oldPath)).status()).toBe(404);
   }
@@ -216,6 +239,61 @@ test('current detail pages exist in both languages and retired routes are gone',
   expect(sitemap).not.toContain('/expertise/supreme-court-lawyer');
 });
 
+test('Hindi navigation opens translated detail pages and switches back to English', async ({
+  page
+}, testInfo) => {
+  await page.goto('/hi');
+  if (testInfo.project.name === 'mobile') {
+    await page.locator('.mobile-menu > summary').click();
+    await page.locator('.mobile-dropdown').first().locator('summary').click();
+    await page
+      .locator('.mobile-dropdown')
+      .first()
+      .getByRole('link', { name: 'आपराधिक कानून' })
+      .click();
+  } else {
+    await page.locator('.nav-dropdown-expertise summary').click();
+    await page
+      .locator('.nav-dropdown-expertise')
+      .getByRole('link', { name: 'आपराधिक कानून' })
+      .click();
+  }
+  await expect(page).toHaveURL(/\/hi\/expertise\/criminal-law\/?$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('आपराधिक कानून');
+  await expect(page.locator('.practice-list li')).toHaveCount(5);
+  await expect(page.locator('.practice-list li').first()).toContainText(hindiOutline[0].items[0]);
+
+  await page.getByRole('link', { name: 'Switch to English' }).click();
+  await expect(page).toHaveURL(/\/expertise\/criminal-law\/?$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Criminal Law');
+});
+
+test('Hindi informational routes render translated copy', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'one content audit is sufficient');
+  const routes = [
+    ['/hi/about', 'हम कौन हैं'],
+    ['/hi/how-we-help', 'वर्तमान कार्य क्षेत्र'],
+    ['/hi/our-work', 'सूचीबद्ध कार्य का स्पष्ट परिचय'],
+    ['/hi/get-help', 'पात्र व्यक्तियों को निःशुल्क'],
+    ['/hi/faq', 'कौन-से आपराधिक कानून संबंधी कार्य'],
+    ['/hi/privacy', 'पूछताछ की जानकारी एकत्र नहीं की जाती'],
+    ['/hi/disclaimer', 'परिणाम का वादा नहीं'],
+    ['/hi/book-appointment', 'यह केवल डिज़ाइन पूर्वावलोकन है'],
+    ['/hi/contact', 'सीधे सार्वजनिक फोन']
+  ] as const;
+
+  for (const [route, phrase] of routes) {
+    await page.goto(route);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'hi');
+    await expect(page.locator('main')).toContainText(phrase);
+    await expect(page.locator('main')).not.toContainText('Free or concessional legal guidance');
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      )
+    ).toBe(false);
+  }
+});
 test('contact and appointment routes state their preview status', async ({ page }) => {
   await page.goto('/contact');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contact us');

@@ -12,20 +12,21 @@ interface Props {
 const { locale, kind } = Astro.props;
 const isContact = kind === 'contact';
 const label = isContact ? headerLabels[locale].contact : headerLabels[locale].appointment;
+const brand = locale === 'hi' ? 'अन्विता लीगल' : facts.name;
 const intro = isContact
   ? locale === 'hi'
     ? 'सीधे सार्वजनिक फोन, ईमेल और कार्यालय विवरण अभी उपलब्ध नहीं कराए गए हैं।'
     : 'Direct public phone, email and office details have not been provided yet.'
   : locale === 'hi'
-    ? 'इस प्रीव्यू में अपॉइंटमेंट बुकिंग उपलब्ध नहीं है।'
-    : 'Appointment booking is not available through this preview.';
+    ? 'इस पूर्वावलोकन में अपॉइंटमेंट अनुरोध भेजना उपलब्ध नहीं है।'
+    : 'Appointment requests cannot be sent through this preview.';
 ---
 
 <BaseLayout
   locale={locale}
   page={kind}
   path={`/${kind}`}
-  title={`${label} | ${facts.name}`}
+  title={`${label} | ${brand}`}
   description={intro}
   noindex
 >

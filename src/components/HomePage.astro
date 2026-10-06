@@ -12,7 +12,7 @@ import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AppointmentSection from './AppointmentSection.astro';
 import SupportHeadingReveal from './SupportHeadingReveal';
-import { localizedPath, practicePath, workAreas } from '../lib/navigation';
+import { localizedPath, practicePath, workAreasFor } from '../lib/navigation';
 import PhosphorIcon from './PhosphorIcon.astro';
 import { copy, urlFor, type Locale } from '../lib/site';
 
@@ -32,12 +32,13 @@ const expertiseMedia = {
   'legal-aid-initiative': { image: aidImage, icon: 'handshake' },
   'marriage-matrimonial-services': { image: marriageImage, icon: 'heart-break' }
 } as const;
-const expertiseCards = workAreas.map((card) => ({
+const areas = workAreasFor(locale);
+const expertiseCards = areas.map((card) => ({
   ...card,
   ...expertiseMedia[card.slug as keyof typeof expertiseMedia]
 }));
-const supportAreas = [workAreas[0], workAreas[1], workAreas[5], workAreas[6]];
-const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
+const supportAreas = [areas[0], areas[1], areas[5], areas[6]];
+const featuredAreas = [areas[0], areas[1], areas[3], areas[7]];
 ---
 
 <BaseLayout locale={locale} page="home" title={h.title} description={h.description}>
@@ -58,7 +59,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
       </div>
       <div class="hero-signature">
         <span class="signature-line" aria-hidden="true"></span>
-        <span lang={locale === 'hi' ? 'en' : undefined}>{t.initiative}</span>
+        <span>{t.initiative}</span>
       </div>
     </div>
     <figure class="hero-visual">
@@ -124,8 +125,8 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
             <span class="expertise-card-icon">
               <PhosphorIcon name={card.icon} />
             </span>
-            <h3 lang="en">{card.title}</h3>
-            <p lang="en">{card.items[0]}</p>
+            <h3>{card.title}</h3>
+            <p>{card.items[0]}</p>
             <span class="expertise-card-link">
               {card.items.length} {locale === 'hi' ? 'विषय देखें' : 'topics · Open card'}
               <PhosphorIcon name="arrow-right" />
@@ -148,9 +149,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
                 {locale === 'hi' ? 'कार्य क्षेत्र' : 'Area of work'} {index + 1} /{' '}
                 {expertiseCards.length}
               </p>
-              <h3 id={`expertise-panel-title-${card.slug}`} lang="en">
-                {card.title}
-              </h3>
+              <h3 id={`expertise-panel-title-${card.slug}`}>{card.title}</h3>
             </div>
             <a
               class="expertise-panel-close"
@@ -160,10 +159,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
               <PhosphorIcon name="plus" />
             </a>
           </div>
-          {locale === 'hi' && (
-            <p class="expertise-language-note">विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।</p>
-          )}
-          <ul class="expertise-topic-list" lang="en">
+          <ul class="expertise-topic-list">
             {card.items.map((item) => (
               <li>
                 <strong>{item}</strong>
@@ -173,7 +169,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
           <div class="expertise-related">
             <h4>{locale === 'hi' ? 'विस्तृत पेज' : 'Detailed page'}</h4>
             <div>
-              <a href={localizedPath(practicePath(card.group, card.slug), locale)} lang="en">
+              <a href={localizedPath(practicePath(card.group, card.slug), locale)}>
                 {card.title}
                 <PhosphorIcon name="arrow-up-right" />
               </a>
@@ -211,7 +207,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
           href={localizedPath(practicePath(supportAreas[i].group, supportAreas[i].slug), locale)}
         >
           <span class="card-number">{service.number}</span>
-          <div lang={locale === 'hi' ? 'en' : undefined}>
+          <div>
             <h3>{service.title}</h3>
             <p>{service.text}</p>
           </div>
@@ -236,7 +232,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
         {h.steps.map((step, i) => (
           <article class="approach-step">
             <span>0{i + 1}</span>
-            <div lang={locale === 'hi' ? 'en' : undefined}>
+            <div>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
             </div>
@@ -257,7 +253,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
           href={localizedPath(practicePath(featuredAreas[i].group, featuredAreas[i].slug), locale)}
         >
           <span>0{i + 1}</span>
-          <strong lang={locale === 'hi' ? 'en' : undefined}>{topic}</strong>
+          <strong>{topic}</strong>
           <PhosphorIcon name="arrow-up-right" />
         </a>
       ))}
@@ -293,7 +289,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
       <p class="eyebrow">{locale === 'hi' ? 'सवाल-जवाब' : 'Good to know'}</p>
       <h2>{t.faq.heading}</h2>
     </div>
-    <div class="faq-list" lang={locale === 'hi' ? 'en' : undefined}>
+    <div class="faq-list">
       {t.faq.items.slice(0, 3).map((item) => (
         <details>
           <summary>

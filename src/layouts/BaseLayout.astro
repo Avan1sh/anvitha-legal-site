@@ -7,7 +7,7 @@ import { indexingEnabled } from '../lib/indexing';
 import {
   headerLabels,
   localizedPath,
-  practiceGroups,
+  practiceGroupsFor,
   practicePath,
   type PracticeGroup
 } from '../lib/navigation';
@@ -25,6 +25,7 @@ interface Props {
 const { locale, page, path, title, description, noindex = false } = Astro.props;
 const t = copy[locale];
 const header = headerLabels[locale];
+const practiceGroups = practiceGroupsFor(locale);
 const otherLocale: Locale = locale === 'en' ? 'hi' : 'en';
 const routePath = path ?? urlFor(page as PageKey, 'en');
 const canonical = new URL(localizedPath(routePath, locale), Astro.site ?? Astro.url);
@@ -117,7 +118,6 @@ const indexEnabled = indexingEnabled(Astro.site);
                 {practiceGroups[group].map((item) => (
                   <a
                     href={localizedPath(practicePath(group, item.slug), locale)}
-                    lang={locale === 'hi' ? 'en' : undefined}
                     aria-current={
                       page === group && routePath === practicePath(group, item.slug)
                         ? 'page'
@@ -178,7 +178,6 @@ const indexEnabled = indexingEnabled(Astro.site);
                     {practiceGroups[group].map((item) => (
                       <a
                         href={localizedPath(practicePath(group, item.slug), locale)}
-                        lang={locale === 'hi' ? 'en' : undefined}
                         aria-current={
                           page === group && routePath === practicePath(group, item.slug)
                             ? 'page'
