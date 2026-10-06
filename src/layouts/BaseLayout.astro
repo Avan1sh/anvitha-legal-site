@@ -33,7 +33,7 @@ const indexEnabled = indexingEnabled(Astro.site);
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html id="page-scroll-root" lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -60,6 +60,21 @@ const indexEnabled = indexingEnabled(Astro.site);
     <title>{title}</title>
   </head>
   <body class={locale === 'hi' ? 'is-hindi' : ''}>
+    <div
+      class="scroll-progress"
+      data-scroll-progress
+      role="scrollbar"
+      aria-controls="page-scroll-root"
+      aria-label={locale === 'hi' ? 'पृष्ठ स्क्रॉल' : 'Page scroll'}
+      aria-orientation="vertical"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      tabindex="-1"
+      hidden
+    >
+      <span class="scroll-progress-fill" aria-hidden="true"></span>
+    </div>
     <a class="skip-link" href="#content">
       {locale === 'hi' ? 'मुख्य सामग्री पर जाएँ' : 'Skip to content'}
     </a>
@@ -233,6 +248,7 @@ const indexEnabled = indexingEnabled(Astro.site);
   </body>
 </html>
 <script>
+  import '../scripts/scrollProgress';
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       document

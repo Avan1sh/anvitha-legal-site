@@ -6,9 +6,11 @@ test('home is readable and stays within the viewport', async ({ page }, testInfo
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Find clarity');
   await expect(page.locator('.hero-actions .phosphor-icon svg').first()).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-    false
-  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    )
+  ).toBe(false);
   await page.screenshot({ path: testInfo.outputPath('home-viewport.png') });
   await page.screenshot({ path: testInfo.outputPath('home.png'), fullPage: true });
 });
@@ -28,9 +30,11 @@ test('Hindi home presents the new scope without unreviewed bullet translations',
   await expect(panel).toBeVisible();
   await expect(panel.getByText('विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।')).toBeVisible();
   await expect(panel.locator('.expertise-topic-list')).toHaveAttribute('lang', 'en');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-    false
-  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    )
+  ).toBe(false);
   await page.screenshot({ path: testInfo.outputPath('hindi-home-viewport.png') });
 });
 
@@ -63,9 +67,11 @@ test('eight expertise cards reveal all firm-owner bullet lists', async ({ page }
     await expect(panel.locator('.expertise-topic-list li')).toHaveCount(item.items.length);
     await expect(panel.getByRole('heading', { name: item.title })).toBeVisible();
     await expect(panel.locator('.expertise-topic-list li')).toHaveText(item.items);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-      false
-    );
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      )
+    ).toBe(false);
   }
   const lastPanel = page.locator('#expertise-marriage-matrimonial-services');
   await lastPanel.screenshot({ path: testInfo.outputPath('expertise-open-panel.png') });
@@ -95,9 +101,11 @@ test('about page uses current areas and legal aid bullets only', async ({ page }
   await expect(page.getByText('Consumer Disputes')).toHaveCount(0);
   await page.goto('/hi/about');
   await expect(page.getByRole('heading', { name: 'हम कौन हैं' })).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-    false
-  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    )
+  ).toBe(false);
 });
 
 test('legal aid page lists only the supplied aid and documentation services', async ({ page }) => {
@@ -123,9 +131,11 @@ test('areas, work and legal aid pages fit the viewport', async ({ page }, testIn
   for (const route of ['how-we-help', 'our-work', 'get-help']) {
     await page.goto(`/${route}`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-      false
-    );
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+      )
+    ).toBe(false);
     await page.screenshot({ path: testInfo.outputPath(`${route}.png`), fullPage: true });
   }
 });
@@ -171,9 +181,11 @@ test('header fits a mid-sized desktop viewport', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop breakpoint check');
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto('/');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-    false
-  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    )
+  ).toBe(false);
   await page.locator('.nav-dropdown-services summary').click();
   await expect(page.locator('.nav-dropdown-services .nav-dropdown-panel')).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('desktop-1024-services.png') });
@@ -236,9 +248,11 @@ test('homepage support heading reveals on scroll and remains readable without Ja
     .poll(() => firstLine.evaluate((element) => getComputedStyle(element).opacity))
     .toBe('1');
   await expect(reveal.getByRole('heading', { level: 2 })).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
-    false
-  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    )
+  ).toBe(false);
   await page.screenshot({ path: testInfo.outputPath('support-reveal.png') });
 
   if (testInfo.project.name === 'desktop') {
@@ -255,6 +269,58 @@ test('homepage support heading reveals on scroll and remains readable without Ja
       await expect
         .poll(() => staticLine.evaluate((element) => getComputedStyle(element).opacity))
         .toBe('1');
+    } finally {
+      await noScriptPage.close();
+    }
+  }
+});
+
+test('scroll progress rail fills through the page and supports pointer and keyboard', async ({
+  page,
+  browser
+}, testInfo) => {
+  await page.goto('/');
+  const rail = page.locator('[data-scroll-progress]');
+  await expect(rail).toBeVisible();
+  await expect(rail).toHaveAttribute('aria-valuenow', '0');
+  await expect(page.locator('html')).toHaveClass(/has-scroll-progress/);
+
+  const railBox = await rail.boundingBox();
+  expect(railBox).not.toBeNull();
+  await rail.click({ position: { x: 12, y: railBox!.height / 2 } });
+  await expect
+    .poll(async () => Number(await rail.getAttribute('aria-valuenow')))
+    .toBeGreaterThan(45);
+  await expect.poll(async () => Number(await rail.getAttribute('aria-valuenow'))).toBeLessThan(55);
+
+  await page.screenshot({ path: testInfo.outputPath('scroll-progress.png') });
+  await rail.focus();
+  await page.keyboard.press('End');
+  await expect(rail).toHaveAttribute('aria-valuenow', '100');
+  await page.keyboard.press('Home');
+  await expect(rail).toHaveAttribute('aria-valuenow', '0');
+  await page.evaluate(() =>
+    window.scrollTo({
+      top: (document.scrollingElement!.scrollHeight - document.scrollingElement!.clientHeight) / 4,
+      behavior: 'instant'
+    })
+  );
+  await expect
+    .poll(async () => Number(await rail.getAttribute('aria-valuenow')))
+    .toBeGreaterThan(20);
+
+  if (testInfo.project.name === 'desktop') {
+    const noScriptPage = await browser.newPage({
+      javaScriptEnabled: false,
+      baseURL: 'http://localhost:4321'
+    });
+    try {
+      await noScriptPage.goto('/');
+      await expect(noScriptPage.locator('[data-scroll-progress]')).toBeHidden();
+      await expect(noScriptPage.locator('html')).not.toHaveClass(/has-scroll-progress/);
+      expect(
+        await noScriptPage.evaluate(() => getComputedStyle(document.documentElement).scrollbarWidth)
+      ).not.toBe('none');
     } finally {
       await noScriptPage.close();
     }

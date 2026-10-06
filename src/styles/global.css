@@ -402,6 +402,7 @@ p {
 }
 .hero-visual {
   position: relative;
+  margin: 0;
   min-height: 560px;
   overflow: hidden;
   background: var(--info);
@@ -2041,5 +2042,52 @@ p {
   }
   .practice-detail-image {
     margin-bottom: 36px;
+  }
+}
+/* The native scrollbar remains available when JavaScript is disabled. */
+html.has-scroll-progress {
+  scrollbar-width: none;
+}
+html.has-scroll-progress::-webkit-scrollbar {
+  display: none;
+}
+.scroll-progress {
+  --scroll-progress: 0;
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 200;
+  width: 24px;
+  height: 100vh;
+  height: 100dvh;
+  cursor: pointer;
+  touch-action: none;
+}
+.scroll-progress[hidden] {
+  display: none;
+}
+.scroll-progress::before,
+.scroll-progress-fill {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 4px;
+}
+.scroll-progress::before {
+  content: '';
+  background: var(--line);
+}
+.scroll-progress-fill {
+  background: var(--accent);
+  transform: scaleY(var(--scroll-progress));
+  transform-origin: top;
+  will-change: transform;
+}
+.scroll-progress:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+@media (max-width: 600px) {
+  .scroll-progress::before,
+  .scroll-progress-fill {
+    width: 3px;
   }
 }
