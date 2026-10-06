@@ -1,0 +1,78 @@
+---
+import { entryDisclaimer } from '../lib/entryDisclaimer';
+
+const languages = ['en', 'hi'] as const;
+---
+
+<dialog
+  class="entry-disclaimer"
+  data-entry-disclaimer
+  aria-labelledby="entry-disclaimer-en entry-disclaimer-hi"
+>
+  <div class="entry-disclaimer-inner">
+    <div class="entry-disclaimer-grid">
+      {languages.map((language) => (
+        <section
+          class:list={[
+            'entry-disclaimer-language',
+            { 'entry-disclaimer-hindi': language === 'hi' }
+          ]}
+          lang={language}
+          aria-labelledby={'entry-disclaimer-' + language}
+        >
+          <h2
+            id={'entry-disclaimer-' + language}
+            tabindex={language === 'en' ? '-1' : undefined}
+            autofocus={language === 'en'}
+          >
+            {entryDisclaimer[language].title}
+          </h2>
+          <p>{entryDisclaimer[language].intro}</p>
+          <ol class="entry-disclaimer-clauses">
+            {entryDisclaimer[language].clauses.map((clause) => (
+              <li>
+                <span>{clause.label}</span>
+                <p>{clause.text}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+    </div>
+    <div class="entry-disclaimer-action">
+      <button class="button button-dark" type="button" data-entry-disclaimer-agree>
+        I Agree <span aria-hidden="true">/</span> <span lang="hi">मैं सहमत हूँ</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+<script is:inline>
+  (() => {
+    const dialog = document.querySelector('[data-entry-disclaimer]');
+    const button = dialog?.querySelector('[data-entry-disclaimer-agree]');
+    if (!dialog || !button) return;
+
+    const storageKey = 'anvitha-entry-disclaimer-v1';
+    let agreed = false;
+    try {
+      agreed = localStorage.getItem(storageKey) === 'agreed';
+    } catch {
+      // Storage may be unavailable; visitors can still agree for this page.
+    }
+    if (agreed) return;
+
+    dialog.addEventListener('cancel', (event) => event.preventDefault());
+    dialog.showModal();
+    document.documentElement.classList.add('entry-disclaimer-active');
+
+    button.addEventListener('click', () => {
+      try {
+        localStorage.setItem(storageKey, 'agreed');
+      } catch {
+        // The modal still closes when browser storage is disabled.
+      }
+      dialog.close();
+      document.documentElement.classList.remove('entry-disclaimer-active');
+    });
+  })();
+</script>

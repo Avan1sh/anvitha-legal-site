@@ -216,20 +216,21 @@ p {
   flex: 0 0 auto;
 }
 .wordmark-mark {
+  position: relative;
+  display: block;
   width: 43px;
   height: 43px;
-  display: block;
-  text-align: center;
-  background: var(--ink);
-  color: var(--white);
-  font-family: 'EB Garamond Variable', Georgia, serif;
-  font-size: 1.85rem;
-  font-weight: 400;
-  line-height: 43px;
-  letter-spacing: -0.1em;
+  flex: none;
+  overflow: hidden;
 }
-.wordmark-mark span {
-  color: #d4a99d;
+.wordmark-mark img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 45px;
+  height: auto;
+  max-width: none;
+  transform: translate(-50%, -50%);
 }
 .wordmark-text {
   display: flex;
@@ -347,6 +348,39 @@ p {
 }
 .status-link {
   margin-top: 36px;
+}
+.status-contact-methods {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 660px;
+  margin-top: 36px;
+}
+.status-contact-methods a {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+}
+.status-contact-methods a span {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+.status-contact-methods a strong {
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.status-contact-methods a:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+@media (max-width: 600px) {
+  .status-contact-methods {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 }
 
 .hero {
@@ -880,36 +914,14 @@ p {
   place-items: center;
   background: var(--ink);
 }
-.work-visual-inner {
-  width: 70%;
-  height: 69%;
-  border: 1px solid rgb(245 240 232 / 50%);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 8%;
-  color: var(--paper);
-}
-.work-visual-inner > span {
-  font-family: 'EB Garamond Variable', Georgia, serif;
-  font-size: clamp(6rem, 14vw, 14rem);
-  line-height: 0.8;
-  letter-spacing: -0.1em;
-}
-.work-visual-lines {
-  display: grid;
-  gap: 11px;
-}
-.work-visual-lines i {
+.work-visual-logo,
+.work-visual-logo img {
   display: block;
-  height: 1px;
-  background: rgb(245 240 232 / 50%);
+  width: 100%;
+  height: 100%;
 }
-.work-visual-lines i:nth-child(2) {
-  width: 79%;
-}
-.work-visual-lines i:nth-child(3) {
-  width: 52%;
+.work-visual-logo img {
+  object-fit: cover;
 }
 .work-teaser-copy h2 {
   max-width: 560px;
@@ -1026,17 +1038,14 @@ p {
 .inner-hero-symbol {
   width: 280px;
   aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 0;
-  color: var(--accent);
+  overflow: hidden;
+  background: var(--ink);
 }
-.inner-hero-symbol span {
-  font-family: 'EB Garamond Variable', Georgia, serif;
-  font-size: 8rem;
-  letter-spacing: -0.14em;
-  transform: translateX(-9px);
+.inner-hero-symbol .brand-logo,
+.inner-hero-symbol img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .inner-hero-compact {
   min-height: 420px;
@@ -1381,6 +1390,26 @@ p {
   font-size: clamp(3rem, 5.5vw, 5.6rem);
   font-weight: 400;
   line-height: 1.04;
+}
+.footer-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-top: 34px;
+}
+.footer-contact span {
+  flex-basis: 100%;
+  color: #d4c3b9;
+  font-size: 0.79rem;
+}
+.footer-contact a {
+  font-size: 0.91rem;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  overflow-wrap: anywhere;
+}
+.footer-contact a:hover {
+  color: #e3b9ae;
 }
 .footer-links {
   display: grid;
@@ -2089,5 +2118,106 @@ html.has-scroll-progress::-webkit-scrollbar {
   .scroll-progress::before,
   .scroll-progress-fill {
     width: 3px;
+  }
+}
+/* First-visit bilingual entry disclaimer. */
+html.entry-disclaimer-active {
+  overflow: hidden;
+}
+.entry-disclaimer {
+  width: min(1200px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgb(24 12 12 / 24%);
+}
+.entry-disclaimer::backdrop {
+  background: rgb(25 12 13 / 74%);
+}
+.entry-disclaimer-inner {
+  padding: clamp(24px, 4vw, 56px);
+}
+.entry-disclaimer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 5vw, 72px);
+}
+.entry-disclaimer-language {
+  min-width: 0;
+}
+.entry-disclaimer-hindi {
+  font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif;
+}
+.entry-disclaimer-language + .entry-disclaimer-language {
+  border-left: 1px solid var(--line);
+  padding-left: clamp(28px, 5vw, 72px);
+}
+.entry-disclaimer-language h2 {
+  margin-bottom: 22px;
+  font-size: clamp(2rem, 3.3vw, 3.15rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+.entry-disclaimer-hindi h2 {
+  font-family: 'Noto Serif Devanagari', 'Nirmala UI', 'Mangal', serif;
+}
+.entry-disclaimer-language h2[tabindex='-1']:focus-visible {
+  outline: none;
+}
+.entry-disclaimer-language > p {
+  font-weight: 600;
+}
+.entry-disclaimer-language p {
+  margin-bottom: 0;
+  font-size: 0.91rem;
+  line-height: 1.65;
+}
+.entry-disclaimer-clauses {
+  display: grid;
+  gap: 14px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.entry-disclaimer-clauses li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 7px;
+}
+.entry-disclaimer-clauses li > span {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.entry-disclaimer-action {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(28px, 4vw, 48px);
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.entry-disclaimer-action .button {
+  min-width: 230px;
+  gap: 10px;
+}
+.entry-disclaimer-action .button span[lang='hi'] {
+  font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif;
+}
+@media (max-width: 760px) {
+  .entry-disclaimer-grid {
+    grid-template-columns: 1fr;
+  }
+  .entry-disclaimer-language + .entry-disclaimer-language {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 28px 0 0;
+  }
+  .entry-disclaimer-action .button {
+    width: 100%;
   }
 }

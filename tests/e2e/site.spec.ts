@@ -3,6 +3,12 @@ import expertiseOutline from '../../src/content/expertise.json' with { type: 'js
 import hindiOutline from '../../src/content/expertise.hi.json' with { type: 'json' };
 import { practiceGroups, type PracticeGroup } from '../../src/lib/navigation';
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('anvitha-entry-disclaimer-v1', 'agreed');
+  });
+});
+
 test('home is readable and stays within the viewport', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Find clarity');
@@ -117,10 +123,12 @@ test('legal aid page lists only the supplied aid and documentation services', as
   await page.goto('/get-help');
   await expect(page.locator('.urgent-panel .practice-list li')).toHaveCount(3);
   await expect(page.locator('.preparation-panel .prepare-list li')).toHaveCount(4);
+  await expect(page.locator('.contact-information a[href="tel:7082325677"]')).toHaveText(
+    '70823 25677'
+  );
   await expect(
-    page.getByText('Direct public contact details have not been provided yet.')
-  ).toBeVisible();
-  await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
+    page.locator('.contact-information a[href="mailto:anvithalegal@gmail.com"]')
+  ).toHaveText('anvithalegal@gmail.com');
   await expect(page.locator('form')).toHaveCount(0);
 });
 
@@ -277,9 +285,9 @@ test('Hindi informational routes render translated copy', async ({ page }, testI
     ['/hi/get-help', 'पात्र व्यक्तियों को निःशुल्क'],
     ['/hi/faq', 'कौन-से आपराधिक कानून संबंधी कार्य'],
     ['/hi/privacy', 'पूछताछ की जानकारी एकत्र नहीं की जाती'],
-    ['/hi/disclaimer', 'परिणाम का वादा नहीं'],
+    ['/hi/disclaimer', 'कोई अधिवक्ता–मुवक्किल संबंध स्थापित नहीं होता'],
     ['/hi/book-appointment', 'यह केवल डिज़ाइन पूर्वावलोकन है'],
-    ['/hi/contact', 'सीधे सार्वजनिक फोन']
+    ['/hi/contact', 'फोन या ईमेल से अन्विता लीगल से संपर्क करें']
   ] as const;
 
   for (const [route, phrase] of routes) {
@@ -297,6 +305,10 @@ test('Hindi informational routes render translated copy', async ({ page }, testI
 test('contact and appointment routes state their preview status', async ({ page }) => {
   await page.goto('/contact');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contact us');
+  await expect(page.locator('main a[href="tel:7082325677"] strong')).toHaveText('70823 25677');
+  await expect(page.locator('main a[href="mailto:anvithalegal@gmail.com"] strong')).toHaveText(
+    'anvithalegal@gmail.com'
+  );
   await page.goto('/book-appointment');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Book an appointment');
   await expect(
@@ -403,4 +415,57 @@ test('scroll progress rail fills through the page and supports pointer and keybo
       await noScriptPage.close();
     }
   }
+});
+
+test('home footer shows clickable public contact details', async ({ page }) => {
+  await page.goto('/');
+  const footer = page.locator('footer');
+  await expect(footer.locator('a[href="tel:7082325677"]')).toHaveText('70823 25677');
+  await expect(footer.locator('a[href="mailto:anvithalegal@gmail.com"]')).toHaveText(
+    'anvithalegal@gmail.com'
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+    )
+  ).toBe(false);
+});
+
+test('transparent header mark and full brand logo load without a background box', async ({
+  page
+}) => {
+  await page.goto('/');
+  const headerLogo = page.locator('.wordmark-mark img');
+  await expect(headerLogo).toHaveAttribute('src', /anvitha-legal-mark-exact/);
+  await expect
+    .poll(() => headerLogo.evaluate((image: HTMLImageElement) => image.naturalWidth))
+    .toBeGreaterThan(0);
+  expect(
+    await headerLogo.evaluate((image: HTMLImageElement) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const context = canvas.getContext('2d')!;
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, 1, 1).data[3];
+    })
+  ).toBe(0);
+  expect(
+    await page
+      .locator('.wordmark-mark')
+      .evaluate((element) => getComputedStyle(element).backgroundColor)
+  ).toBe('rgba(0, 0, 0, 0)');
+
+  const favicon = page.locator('link[rel="icon"]');
+  await expect(favicon).toHaveAttribute('type', 'image/png');
+  const faviconHref = await favicon.getAttribute('href');
+  expect(faviconHref).toBeTruthy();
+  expect((await page.request.get(faviconHref!)).ok()).toBe(true);
+
+  const brandPanel = page.locator('.work-visual img');
+  await brandPanel.scrollIntoViewIfNeeded();
+  await expect(brandPanel).toHaveAttribute('src', /anvitha-legal-logo/);
+  await expect
+    .poll(() => brandPanel.evaluate((image: HTMLImageElement) => image.naturalWidth))
+    .toBeGreaterThan(0);
 });

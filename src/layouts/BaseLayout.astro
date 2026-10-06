@@ -1,8 +1,12 @@
 ---
 import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import brandLogoImage from '../assets/brand/anvitha-legal-logo.png';
 import '@fontsource-variable/eb-garamond/wght.css';
 import '@fontsource-variable/manrope/wght.css';
 import PhosphorIcon from '../components/PhosphorIcon.astro';
+import BrandLogo from '../components/BrandLogo.astro';
+import EntryDisclaimer from '../components/EntryDisclaimer.astro';
 import { indexingEnabled } from '../lib/indexing';
 import {
   headerLabels,
@@ -31,6 +35,7 @@ const routePath = path ?? urlFor(page as PageKey, 'en');
 const canonical = new URL(localizedPath(routePath, locale), Astro.site ?? Astro.url);
 const alternate = new URL(localizedPath(routePath, otherLocale), Astro.site ?? Astro.url);
 const indexEnabled = indexingEnabled(Astro.site);
+const favicon = await getImage({ src: brandLogoImage, width: 64, height: 64, format: 'png' });
 ---
 
 <!doctype html>
@@ -57,10 +62,11 @@ const indexEnabled = indexingEnabled(Astro.site);
       hreflang="x-default"
       href={new URL(localizedPath(routePath, 'en'), Astro.site ?? Astro.url).href}
     />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={favicon.src} type="image/png" />
     <title>{title}</title>
   </head>
   <body class={locale === 'hi' ? 'is-hindi' : ''}>
+    <EntryDisclaimer />
     <div
       class="scroll-progress"
       data-scroll-progress
@@ -86,9 +92,7 @@ const indexEnabled = indexingEnabled(Astro.site);
           href={urlFor('home', locale)}
           aria-label={`${facts.name} — ${t.nav.home}`}
         >
-          <span class="wordmark-mark" aria-hidden="true">
-            A<span>.</span>
-          </span>
+          <BrandLogo variant="mark" decorative class="wordmark-mark" />
           <span class="wordmark-text">
             <strong>Anvitha</strong>
             <small>LEGAL</small>
@@ -220,6 +224,11 @@ const indexEnabled = indexingEnabled(Astro.site);
             {t.footerAction}
             <PhosphorIcon name="arrow-up-right" />
           </a>
+          <div class="footer-contact">
+            <span>{locale === 'hi' ? 'संपर्क करें' : 'Contact us'}</span>
+            <a href={facts.phoneHref}>{facts.phone}</a>
+            <a href={'mailto:' + facts.email}>{facts.email}</a>
+          </div>
         </div>
         <div class="footer-links">
           <div>

@@ -10,6 +10,7 @@ import serviceImage from '../assets/expertise/corporate-lawyer.png';
 import aidImage from '../assets/expertise/divorce-lawyer.png';
 import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import BrandLogo from './BrandLogo.astro';
 import AppointmentSection from './AppointmentSection.astro';
 import SupportHeadingReveal from './SupportHeadingReveal';
 import { localizedPath, practicePath, workAreasFor } from '../lib/navigation';
@@ -263,14 +264,7 @@ const featuredAreas = [areas[0], areas[1], areas[3], areas[7]];
   <section class="work-teaser section-pad">
     <div class="page-wrap work-teaser-grid">
       <div class="work-visual" aria-hidden="true">
-        <div class="work-visual-inner">
-          <span>A.</span>
-          <div class="work-visual-lines">
-            <i></i>
-            <i></i>
-            <i></i>
-          </div>
-        </div>
+        <BrandLogo variant="full" decorative class="work-visual-logo" />
       </div>
       <div class="work-teaser-copy">
         <p class="eyebrow">{locale === 'hi' ? 'हमारा कार्य' : 'Our work'}</p>

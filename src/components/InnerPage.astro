@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PhosphorIcon from './PhosphorIcon.astro';
+import BrandLogo from './BrandLogo.astro';
 import { localizedPath, practicePath, workAreasFor } from '../lib/navigation';
 import { copy, facts, urlFor, type Locale, type PageKey } from '../lib/site';
 
@@ -42,7 +43,7 @@ const documentationArea = areas.find((item) => item.slug === 'documentation-advi
       {intro && <p class="inner-intro">{intro}</p>}
     </div>
     <div class="inner-hero-symbol" aria-hidden="true">
-      <span>A.</span>
+      <BrandLogo variant="full" decorative loading="eager" />
     </div>
   </section>
 
@@ -157,12 +158,8 @@ const documentationArea = areas.find((item) => item.slug === 'documentation-advi
         </div>
         <div class="contact-information">
           <h2>{locale === 'hi' ? 'सार्वजनिक संपर्क' : 'Direct contact'}</h2>
-          {facts.phone ? (
-            <a href={`tel:${facts.phone}`}>{facts.phone}</a>
-          ) : (
-            <p>{t.contact.contactPending}</p>
-          )}
-          {facts.email && <a href={`mailto:${facts.email}`}>{facts.email}</a>}
+          <a href={facts.phoneHref}>{facts.phone}</a>
+          <a href={'mailto:' + facts.email}>{facts.email}</a>
           {facts.address && <p>{facts.address}</p>}
           <a
             class="text-link"

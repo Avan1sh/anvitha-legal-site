@@ -1,3 +1,5 @@
+import { entryDisclaimer } from './entryDisclaimer';
+
 export type Locale = 'en' | 'hi';
 export type PageKey =
   'home' | 'about' | 'how-we-help' | 'our-work' | 'get-help' | 'faq' | 'privacy' | 'disclaimer';
@@ -21,9 +23,10 @@ export function urlFor(page: PageKey, locale: Locale): string {
 export const facts = {
   name: 'Anvitha Legal',
   trust: 'A S Godara Foundation Trust',
-  // The owner has not supplied public contact or office details.
-  phone: null as string | null,
-  email: null as string | null,
+  // Public phone and email supplied by the firm owner; office address is still pending.
+  phone: '70823 25677',
+  phoneHref: 'tel:7082325677',
+  email: 'anvithalegal@gmail.com',
   address: null as string | null,
   serviceCity: null as string | null
 };
@@ -182,7 +185,6 @@ const en = {
     heading: 'Guidance and documentation.',
     intro: 'The Legal Aid Initiative and Documentation & Advisory services are listed below.',
     aidTitle: 'Legal Aid Initiative',
-    contactPending: 'Direct public contact details have not been provided yet.',
     documentationTitle: 'Documentation & Advisory'
   },
   faq: {
@@ -226,23 +228,9 @@ const en = {
   disclaimer: {
     title: 'Disclaimer | Anvitha Legal',
     description: 'Limits of the information on this website.',
-    heading: 'Important information',
-    intro:
-      'The listed areas of work are general information and do not address the facts of an individual matter.',
-    sections: [
-      {
-        title: 'Individual advice',
-        text: 'A qualified professional should review the facts and documents of a specific matter.'
-      },
-      {
-        title: 'No promised result',
-        text: 'No outcome is guaranteed by the information on this site.'
-      },
-      {
-        title: 'Preview',
-        text: 'Public contact details and appointment submissions are not available in this preview.'
-      }
-    ]
+    heading: entryDisclaimer.en.title,
+    intro: entryDisclaimer.en.intro,
+    sections: entryDisclaimer.en.clauses.map(({ label, text }) => ({ title: label, text }))
   },
   footerLead: 'Explore the current areas of work.',
   footerAction: 'View all areas',
@@ -403,7 +391,6 @@ const hi: typeof en = {
     heading: 'मार्गदर्शन और दस्तावेज़ीकरण।',
     intro: 'कानूनी सहायता पहल और दस्तावेज़ीकरण तथा सलाह सेवाएँ नीचे सूचीबद्ध हैं।',
     aidTitle: 'कानूनी सहायता पहल',
-    contactPending: 'सीधे सार्वजनिक संपर्क विवरण अभी उपलब्ध नहीं कराए गए हैं।',
     documentationTitle: 'दस्तावेज़ीकरण और कानूनी सलाह'
   },
   faq: {
@@ -451,23 +438,9 @@ const hi: typeof en = {
   disclaimer: {
     title: 'अस्वीकरण | अन्विता लीगल',
     description: 'इस वेबसाइट पर दी गई जानकारी की सीमाएँ।',
-    heading: 'महत्वपूर्ण जानकारी',
-    intro:
-      'सूचीबद्ध कार्य क्षेत्र सामान्य जानकारी हैं और किसी व्यक्तिगत मामले के तथ्यों पर सलाह नहीं देते।',
-    sections: [
-      {
-        title: 'व्यक्तिगत सलाह',
-        text: 'किसी विशेष मामले के तथ्यों और दस्तावेज़ों की समीक्षा योग्य पेशेवर से करानी चाहिए।'
-      },
-      {
-        title: 'परिणाम का वादा नहीं',
-        text: 'इस वेबसाइट की जानकारी किसी परिणाम की गारंटी नहीं देती।'
-      },
-      {
-        title: 'पूर्वावलोकन',
-        text: 'इस पूर्वावलोकन में सार्वजनिक संपर्क विवरण और अपॉइंटमेंट अनुरोध भेजने की सुविधा उपलब्ध नहीं है।'
-      }
-    ]
+    heading: entryDisclaimer.hi.title,
+    intro: entryDisclaimer.hi.intro,
+    sections: entryDisclaimer.hi.clauses.map(({ label, text }) => ({ title: label, text }))
   },
   footerLead: 'वर्तमान कार्य क्षेत्र देखें।',
   footerAction: 'सभी क्षेत्र देखें',

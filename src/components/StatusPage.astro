@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PhosphorIcon from './PhosphorIcon.astro';
+import BrandLogo from './BrandLogo.astro';
 import { headerLabels } from '../lib/navigation';
 import { facts, urlFor, type Locale } from '../lib/site';
 
@@ -15,8 +16,8 @@ const label = isContact ? headerLabels[locale].contact : headerLabels[locale].ap
 const brand = locale === 'hi' ? 'अन्विता लीगल' : facts.name;
 const intro = isContact
   ? locale === 'hi'
-    ? 'सीधे सार्वजनिक फोन, ईमेल और कार्यालय विवरण अभी उपलब्ध नहीं कराए गए हैं।'
-    : 'Direct public phone, email and office details have not been provided yet.'
+    ? 'फोन या ईमेल से अन्विता लीगल से संपर्क करें।'
+    : 'Contact Anvitha Legal by phone or email.'
   : locale === 'hi'
     ? 'इस पूर्वावलोकन में अपॉइंटमेंट अनुरोध भेजना उपलब्ध नहीं है।'
     : 'Appointment requests cannot be sent through this preview.';
@@ -35,13 +36,25 @@ const intro = isContact
       <p class="eyebrow">{label}</p>
       <h1>{label}</h1>
       <p class="inner-intro">{intro}</p>
+      {isContact && (
+        <div class="status-contact-methods">
+          <a href={facts.phoneHref}>
+            <span>{locale === 'hi' ? 'फ़ोन' : 'Phone'}</span>
+            <strong>{facts.phone}</strong>
+          </a>
+          <a href={'mailto:' + facts.email}>
+            <span>{locale === 'hi' ? 'ईमेल' : 'Email'}</span>
+            <strong>{facts.email}</strong>
+          </a>
+        </div>
+      )}
       <a class="text-link status-link" href={urlFor('how-we-help', locale)}>
         {locale === 'hi' ? 'कार्य क्षेत्र देखें' : 'View areas of work'}
         <PhosphorIcon name="arrow-right" />
       </a>
     </div>
     <div class="inner-hero-symbol" aria-hidden="true">
-      <span>A.</span>
+      <BrandLogo variant="full" decorative loading="eager" />
     </div>
   </section>
 </BaseLayout>

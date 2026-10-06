@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/anvitha-legal-logo.png';
+import transparentMark from '../assets/brand/anvitha-legal-mark-exact.png';
+
+interface Props {
+  variant?: 'mark' | 'full';
+  decorative?: boolean;
+  loading?: 'eager' | 'lazy';
+  class?: string;
+}
+
+const { variant = 'full', decorative = false, loading, class: className } = Astro.props;
+const isMark = variant === 'mark';
+---
+
+<span
+  class:list={['brand-logo', 'brand-logo-' + variant, className]}
+  aria-hidden={decorative ? 'true' : undefined}
+>
+  <Image
+    src={isMark ? transparentMark : logo}
+    alt={decorative ? '' : 'Anvitha Legal'}
+    width={isMark ? 192 : 1280}
+    height={isMark ? 197 : 1280}
+    format="webp"
+    loading={loading ?? (variant === 'mark' ? 'eager' : 'lazy')}
+    decoding="async"
+  />
+</span>
