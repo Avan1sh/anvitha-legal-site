@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AppointmentSection from './AppointmentSection.astro';
+import { facts, type Locale } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<BaseLayout
+  locale={locale}
+  page="book-appointment"
+  title={`${locale === 'hi' ? 'अपॉइंटमेंट बुक करें' : 'Book an appointment'} | ${facts.name}`}
+  description={
+    locale === 'hi'
+      ? 'Anvitha Legal अपॉइंटमेंट पेज का पूर्वावलोकन।'
+      : 'Preview the Anvitha Legal appointment page.'
+  }
+  noindex
+>
+  <AppointmentSection locale={locale} page />
+</BaseLayout>

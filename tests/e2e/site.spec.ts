@@ -209,6 +209,12 @@ test('contact and appointment routes state their preview status', async ({ page 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Contact us');
   await page.goto('/book-appointment');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Book an appointment');
-  await expect(page.getByText('Appointment booking is not available')).toBeVisible();
-  await expect(page.locator('form')).toHaveCount(0);
+  await expect(
+    page.getByText(
+      'Design preview only. Messages cannot be sent yet, and no information is collected.'
+    )
+  ).toBeVisible();
+  await expect(page.locator('form fieldset')).toHaveAttribute('disabled', '');
+  await expect(page.getByLabel('Your name')).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Send message' })).toBeDisabled();
 });

@@ -1,5 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import criminalImage from '../assets/expertise/criminal-lawyer.png';
+import familyImage from '../assets/expertise/family-disputes-lawyer.png';
+import civilImage from '../assets/expertise/civil-lawyer.png';
+import bankingImage from '../assets/expertise/cheque-bounce-lawyer.png';
+import serviceImage from '../assets/expertise/corporate-lawyer.png';
+import documentationImage from '../assets/hero-still-life.png';
+import aidImage from '../assets/expertise/divorce-lawyer.png';
+import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
+import ContactForm from './ContactForm.astro';
 import PhosphorIcon from './PhosphorIcon.astro';
 import {
   headerLabels,
@@ -16,6 +26,17 @@ interface Props {
 }
 
 const { locale, group, item } = Astro.props;
+const practiceImages = {
+  'criminal-law': criminalImage,
+  'family-matrimonial-law': familyImage,
+  'civil-law': civilImage,
+  'banking-debt-recovery': bankingImage,
+  'service-education-law': serviceImage,
+  'documentation-advisory': documentationImage,
+  'legal-aid-initiative': aidImage,
+  'marriage-matrimonial-services': marriageImage
+};
+const practiceImage = practiceImages[item.slug as keyof typeof practiceImages];
 ---
 
 <BaseLayout
@@ -33,23 +54,38 @@ const { locale, group, item } = Astro.props;
       {locale === 'hi' && <p class="inner-intro">विस्तृत विषय अभी अंग्रेज़ी में उपलब्ध हैं।</p>}
     </div>
   </section>
-  <section class="section-pad page-wrap practice-detail">
-    <p class="eyebrow">{locale === 'hi' ? 'सूचीबद्ध कार्य' : 'Listed work'}</p>
-    <ul class="practice-list" lang="en">
-      {item.items.map((detail) => (
-        <li>{detail}</li>
-      ))}
-    </ul>
-    <div class="soft-note">
-      <p>
-        {locale === 'hi'
-          ? 'किसी विशेष मामले के लिए व्यक्तिगत सलाह आवश्यक है।'
-          : 'The details of an individual matter require individual advice.'}
-      </p>
-      <a class="text-link" href={urlFor('how-we-help', locale)}>
-        {locale === 'hi' ? 'सभी कार्य क्षेत्र देखें' : 'View all areas of work'}
-        <PhosphorIcon name="arrow-right" />
-      </a>
+  <section class="section-pad page-wrap practice-detail practice-detail-grid">
+    <div class="practice-detail-main">
+      {practiceImage && (
+        <Image
+          class="practice-detail-image"
+          src={practiceImage}
+          alt=""
+          loading="lazy"
+          widths={[640, 1000, 1400]}
+          sizes="(max-width: 900px) 100vw, 65vw"
+        />
+      )}
+      <p class="eyebrow">{locale === 'hi' ? 'सूचीबद्ध कार्य' : 'Listed work'}</p>
+      <ul class="practice-list" lang="en">
+        {item.items.map((detail) => (
+          <li>{detail}</li>
+        ))}
+      </ul>
+      <div class="soft-note">
+        <p>
+          {locale === 'hi'
+            ? 'किसी विशेष मामले के लिए व्यक्तिगत सलाह आवश्यक है।'
+            : 'The details of an individual matter require individual advice.'}
+        </p>
+        <a class="text-link" href={urlFor('how-we-help', locale)}>
+          {locale === 'hi' ? 'सभी कार्य क्षेत्र देखें' : 'View all areas of work'}
+          <PhosphorIcon name="arrow-right" />
+        </a>
+      </div>
     </div>
+    <aside class="practice-contact" aria-label={locale === 'hi' ? 'संपर्क करें' : 'Get in touch'}>
+      <ContactForm locale={locale} variant="contact" />
+    </aside>
   </section>
 </BaseLayout>

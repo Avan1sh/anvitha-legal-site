@@ -1905,3 +1905,140 @@ p {
   align-self: flex-start;
   margin-top: 26px;
 }
+/* Appointment and practice enquiry previews */
+.appointment-section {
+  background: var(--cream);
+}
+.appointment-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(48px, 6vw, 112px);
+  align-items: start;
+}
+.appointment-copy h1,
+.appointment-copy h2 {
+  margin-bottom: 36px;
+}
+.appointment-visual img {
+  width: 100%;
+  height: min(690px, 54vw);
+  min-height: 480px;
+  object-fit: cover;
+}
+.contact-form-panel-sidebar {
+  background: var(--cream);
+  padding: clamp(24px, 3vw, 42px);
+}
+.contact-form-panel-sidebar h2 {
+  font-size: clamp(2rem, 3vw, 3rem);
+  margin-bottom: 24px;
+}
+.contact-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.contact-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.contact-field-message {
+  grid-column: 1 / -1;
+}
+.contact-field label {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+.contact-field input,
+.contact-field textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--ink-soft);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 13px 14px;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 1;
+}
+.contact-field input {
+  min-height: 50px;
+}
+.contact-field textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+.contact-submit {
+  margin-top: 24px;
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+.contact-form-notice {
+  max-width: 60ch;
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.practice-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 360px);
+  gap: clamp(40px, 5vw, 88px);
+  align-items: start;
+}
+.practice-detail-main {
+  min-width: 0;
+}
+.practice-detail-image {
+  width: 100%;
+  max-height: 620px;
+  aspect-ratio: 1.7;
+  object-fit: cover;
+  margin-bottom: 54px;
+}
+.practice-contact {
+  position: sticky;
+  top: 24px;
+}
+.contact-form-panel-sidebar .contact-form-grid {
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (max-width: 900px) {
+  .appointment-grid,
+  .practice-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .appointment-visual img {
+    height: 440px;
+    min-height: 0;
+  }
+  .practice-contact {
+    position: static;
+  }
+}
+@media (max-width: 600px) {
+  .contact-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .appointment-visual img {
+    height: 300px;
+  }
+  .practice-detail-image {
+    margin-bottom: 36px;
+  }
+}

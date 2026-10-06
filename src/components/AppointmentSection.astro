@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import bookingImage from '../assets/hero-still-life.png';
+import type { Locale } from '../lib/site';
+import ContactForm from './ContactForm.astro';
+
+interface Props {
+  locale: Locale;
+  page?: boolean;
+}
+
+const { locale, page = false } = Astro.props;
+const title = locale === 'hi' ? 'अपॉइंटमेंट बुक करें' : 'Book an appointment';
+---
+
+<section class:list={['appointment-section', 'section-pad', { 'appointment-section-page': page }]}>
+  <div class="page-wrap appointment-grid">
+    <div class="appointment-copy">
+      <p class="eyebrow">{locale === 'hi' ? 'संपर्क' : 'Start a conversation'}</p>
+      {page ? <h1>{title}</h1> : <h2>{title}</h2>}
+      <ContactForm locale={locale} />
+    </div>
+    <div class="appointment-visual">
+      <Image
+        src={bookingImage}
+        alt=""
+        loading="lazy"
+        widths={[480, 760, 1100]}
+        sizes="(max-width: 900px) 100vw, 42vw"
+      />
+    </div>
+  </div>
+</section>

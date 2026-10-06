@@ -1,0 +1,75 @@
+---
+import PhosphorIcon from './PhosphorIcon.astro';
+import type { Locale } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  variant?: 'appointment' | 'contact';
+}
+
+const { locale, variant = 'appointment' } = Astro.props;
+const hi = locale === 'hi';
+const fields = [
+  {
+    id: 'name',
+    label: hi ? 'आपका नाम' : 'Your name',
+    placeholder: hi ? 'अपना नाम लिखें' : 'Enter your name',
+    type: 'text' as const
+  },
+  {
+    id: 'email',
+    label: hi ? 'आपका ईमेल' : 'Your email',
+    placeholder: hi ? 'अपना ईमेल लिखें' : 'Enter your email',
+    type: 'email' as const
+  },
+  {
+    id: 'phone',
+    label: hi ? 'आपका फ़ोन नंबर' : 'Your phone number',
+    placeholder: hi ? 'अपना नंबर लिखें' : 'Enter your number',
+    type: 'tel' as const
+  },
+  {
+    id: 'subject',
+    label: hi ? 'विषय' : 'Subject',
+    placeholder: hi ? 'विषय लिखें' : 'Enter your subject',
+    type: 'text' as const
+  }
+];
+---
+
+<div class:list={['contact-form-panel', { 'contact-form-panel-sidebar': variant === 'contact' }]}>
+  {variant === 'contact' && <h2>{hi ? 'संपर्क करें' : 'Get in touch'}</h2>}
+  <form class="contact-form" aria-describedby={`${variant}-form-notice`}>
+    <fieldset disabled>
+      <div class="contact-form-grid">
+        {fields.map((field) => (
+          <div class="contact-field">
+            <label for={`${variant}-${field.id}`}>{field.label}</label>
+            <input
+              id={`${variant}-${field.id}`}
+              type={field.type}
+              placeholder={field.placeholder}
+            />
+          </div>
+        ))}
+        <div class="contact-field contact-field-message">
+          <label for={`${variant}-message`}>{hi ? 'सवाल / संदेश' : 'Query / message'}</label>
+          <textarea
+            id={`${variant}-message`}
+            rows="5"
+            placeholder={hi ? 'अपना संदेश लिखें...' : 'Write your message here...'}
+          ></textarea>
+        </div>
+      </div>
+      <button class="button contact-submit" type="button" disabled>
+        {hi ? 'संदेश भेजें' : 'Send message'}
+        <PhosphorIcon name="arrow-right" />
+      </button>
+    </fieldset>
+  </form>
+  <p class="contact-form-notice" id={`${variant}-form-notice`}>
+    {hi
+      ? 'यह केवल डिज़ाइन पूर्वावलोकन है। अभी संदेश नहीं भेजा जा सकता और कोई जानकारी एकत्र नहीं की जाती।'
+      : 'Design preview only. Messages cannot be sent yet, and no information is collected.'}
+  </p>
+</div>

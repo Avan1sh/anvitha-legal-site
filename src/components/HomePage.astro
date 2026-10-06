@@ -10,9 +10,10 @@ import serviceImage from '../assets/expertise/corporate-lawyer.png';
 import aidImage from '../assets/expertise/divorce-lawyer.png';
 import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AppointmentSection from './AppointmentSection.astro';
 import { localizedPath, practicePath, workAreas } from '../lib/navigation';
 import PhosphorIcon from './PhosphorIcon.astro';
-import { copy, facts, urlFor, type Locale } from '../lib/site';
+import { copy, urlFor, type Locale } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -307,17 +308,7 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
     </a>
   </section>
 
-  <section class="closing-cta section-pad">
-    <div class="page-wrap">
-      <p class="eyebrow">{facts.name}</p>
-      <h2>{h.ctaTitle}</h2>
-      <p>{h.ctaText}</p>
-      <a class="button button-light" href={urlFor('how-we-help', locale)}>
-        {h.ctaButton}
-        <PhosphorIcon name="arrow-up-right" />
-      </a>
-    </div>
-  </section>
+  <AppointmentSection locale={locale} />
 </BaseLayout>
 <script>
   import '../scripts/motion';
