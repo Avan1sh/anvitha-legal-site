@@ -8,7 +8,7 @@ export default [
     languageOptions: { parserOptions: { parser: tsParser, extraFileExtensions: ['.astro'] } }
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: { parser: tsParser }
   },
   { ignores: ['.agents/**', 'dist/**', 'node_modules/**', '.astro/**', 'playwright-report/**'] }
