@@ -218,3 +218,45 @@ test('contact and appointment routes state their preview status', async ({ page 
   await expect(page.getByLabel('Your name')).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Send message' })).toBeDisabled();
 });
+
+test('homepage support heading reveals on scroll and remains readable without JavaScript', async ({
+  page,
+  browser
+}, testInfo) => {
+  await page.goto('/');
+  const reveal = page.locator('.support-section [data-scroll-reveal]');
+  const firstLine = reveal.locator(':scope > div').first();
+  await expect(reveal).toBeAttached();
+  await expect
+    .poll(() => firstLine.evaluate((element) => getComputedStyle(element).opacity))
+    .toBe('0');
+
+  await reveal.scrollIntoViewIfNeeded();
+  await expect
+    .poll(() => firstLine.evaluate((element) => getComputedStyle(element).opacity))
+    .toBe('1');
+  await expect(reveal.getByRole('heading', { level: 2 })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(
+    false
+  );
+  await page.screenshot({ path: testInfo.outputPath('support-reveal.png') });
+
+  if (testInfo.project.name === 'desktop') {
+    const noScriptPage = await browser.newPage({
+      javaScriptEnabled: false,
+      baseURL: 'http://localhost:4321'
+    });
+    try {
+      await noScriptPage.goto('/');
+      const staticLine = noScriptPage
+        .locator('.support-section [data-scroll-reveal]')
+        .locator(':scope > div')
+        .first();
+      await expect
+        .poll(() => staticLine.evaluate((element) => getComputedStyle(element).opacity))
+        .toBe('1');
+    } finally {
+      await noScriptPage.close();
+    }
+  }
+});

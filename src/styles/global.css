@@ -130,7 +130,8 @@ p {
   font-weight: 500;
   line-height: 1.07;
 }
-.section-heading > p:last-child {
+.section-heading > p:last-child,
+.section-heading[data-scroll-reveal] > div:last-of-type > p {
   max-width: 560px;
   color: var(--ink-soft);
   font-size: 1.14rem;

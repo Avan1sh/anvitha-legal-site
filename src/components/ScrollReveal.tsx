@@ -28,6 +28,7 @@ export default function ScrollReveal({ children, className }: ScrollRevealProps)
     <motion.section
       ref={sectionRef}
       className={className}
+      data-scroll-reveal
       variants={containerVariants}
       initial="hidden"
       animate={isInView ? 'visible' : 'hidden'}
@@ -35,6 +36,11 @@ export default function ScrollReveal({ children, className }: ScrollRevealProps)
       {Children.map(children, (child) => (
         <motion.div variants={childVariants}>{child}</motion.div>
       ))}
+      <noscript>
+        <style>
+          {'[data-scroll-reveal] > div { opacity: 1 !important; transform: none !important; }'}
+        </style>
+      </noscript>
     </motion.section>
   );
 }

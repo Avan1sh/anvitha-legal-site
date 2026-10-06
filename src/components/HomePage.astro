@@ -11,6 +11,7 @@ import aidImage from '../assets/expertise/divorce-lawyer.png';
 import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AppointmentSection from './AppointmentSection.astro';
+import SupportHeadingReveal from './SupportHeadingReveal';
 import { localizedPath, practicePath, workAreas } from '../lib/navigation';
 import PhosphorIcon from './PhosphorIcon.astro';
 import { copy, urlFor, type Locale } from '../lib/site';
@@ -197,11 +198,12 @@ const featuredAreas = [workAreas[0], workAreas[1], workAreas[3], workAreas[7]];
     </div>
   </section>
   <section class="support-section section-pad page-wrap" id="support">
-    <div class="section-heading">
-      <p class="eyebrow">{locale === 'hi' ? 'हमारी सहायता' : 'What we do'}</p>
-      <h2>{h.supportTitle}</h2>
-      <p>{h.supportIntro}</p>
-    </div>
+    <SupportHeadingReveal
+      client:load
+      eyebrow={locale === 'hi' ? 'हमारी सहायता' : 'What we do'}
+      title={h.supportTitle}
+      intro={h.supportIntro}
+    />
     <div class="support-grid">
       {h.services.map((service, i) => (
         <a
