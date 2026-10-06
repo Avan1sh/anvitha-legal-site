@@ -2076,13 +2076,13 @@ html.has-scroll-progress::-webkit-scrollbar {
   background: var(--line);
 }
 .scroll-progress-fill {
-  background: var(--accent);
+  background: var(--ink);
   transform: scaleY(var(--scroll-progress));
   transform-origin: top;
   will-change: transform;
 }
 .scroll-progress:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: -4px;
 }
 @media (max-width: 600px) {
