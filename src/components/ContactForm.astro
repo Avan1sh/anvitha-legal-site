@@ -1,6 +1,8 @@
 ---
 import PhosphorIcon from './PhosphorIcon.astro';
-import type { Locale } from '../lib/site';
+import { appointmentLimits } from '../lib/appointment';
+import { appointmentFormEnabled } from '../lib/appointmentConfig';
+import { facts, type Locale } from '../lib/site';
 
 interface Props {
   locale: Locale;
@@ -9,67 +11,132 @@ interface Props {
 
 const { locale, variant = 'appointment' } = Astro.props;
 const hi = locale === 'hi';
+const formEnabled = appointmentFormEnabled;
 const fields = [
   {
     id: 'name',
     label: hi ? 'आपका नाम' : 'Your name',
     placeholder: hi ? 'अपना नाम लिखें' : 'Enter your name',
-    type: 'text' as const
+    type: 'text',
+    required: true,
+    autocomplete: 'name'
   },
   {
     id: 'email',
     label: hi ? 'आपका ईमेल' : 'Your email',
     placeholder: hi ? 'अपना ईमेल लिखें' : 'Enter your email',
-    type: 'email' as const
+    type: 'email',
+    required: false,
+    autocomplete: 'email'
   },
   {
     id: 'phone',
     label: hi ? 'आपका फ़ोन नंबर' : 'Your phone number',
     placeholder: hi ? 'अपना नंबर लिखें' : 'Enter your number',
-    type: 'tel' as const
+    type: 'tel',
+    required: true,
+    autocomplete: 'tel'
   },
   {
     id: 'subject',
     label: hi ? 'विषय' : 'Subject',
     placeholder: hi ? 'विषय लिखें' : 'Enter your subject',
-    type: 'text' as const
+    type: 'text',
+    required: false,
+    autocomplete: 'off'
   }
-];
+] as const;
 ---
 
 <div class:list={['contact-form-panel', { 'contact-form-panel-sidebar': variant === 'contact' }]}>
   {variant === 'contact' && <h2>{hi ? 'संपर्क करें' : 'Get in touch'}</h2>}
-  <form class="contact-form" aria-describedby={`${variant}-form-notice`}>
-    <fieldset disabled>
+  <form
+    class="contact-form"
+    action="/api/appointment.php"
+    method="post"
+    aria-describedby={`${variant}-form-notice`}
+  >
+    <fieldset disabled={!formEnabled}>
+      <input type="hidden" name="locale" value={locale} />
+      <input type="hidden" name="source" value={Astro.url.pathname} />
+      <div class="contact-honeypot" aria-hidden="true">
+        <label for={`${variant}-website`}>Website</label>
+        <input
+          id={`${variant}-website`}
+          name="website"
+          type="text"
+          autocomplete="off"
+          tabindex="-1"
+        />
+      </div>
       <div class="contact-form-grid">
         {fields.map((field) => (
           <div class="contact-field">
-            <label for={`${variant}-${field.id}`}>{field.label}</label>
+            <label for={`${variant}-${field.id}`}>
+              {field.label}
+              {field.required && (
+                <span class="required-mark" aria-hidden="true">
+                  {' '}
+                  *
+                </span>
+              )}
+            </label>
             <input
               id={`${variant}-${field.id}`}
+              name={field.id}
               type={field.type}
               placeholder={field.placeholder}
+              required={field.required}
+              autocomplete={field.autocomplete}
+              inputmode={field.id === 'phone' ? 'tel' : undefined}
+              maxlength={appointmentLimits[field.id]}
             />
           </div>
         ))}
         <div class="contact-field contact-field-message">
-          <label for={`${variant}-message`}>{hi ? 'सवाल / संदेश' : 'Query / message'}</label>
+          <label for={`${variant}-message`}>
+            {hi ? 'सवाल / संदेश' : 'Query / message'}
+            <span class="required-mark" aria-hidden="true">
+              {' '}
+              *
+            </span>
+          </label>
           <textarea
             id={`${variant}-message`}
+            name="query"
             rows="5"
             placeholder={hi ? 'अपना संदेश लिखें...' : 'Write your message here...'}
+            required
+            maxlength={appointmentLimits.query}
           ></textarea>
         </div>
       </div>
-      <button class="button contact-submit" type="button" disabled>
-        {hi ? 'संदेश भेजें' : 'Send message'}
+      <button class="button contact-submit" type="submit" disabled={!formEnabled}>
+        {hi ? 'अपॉइंटमेंट अनुरोध भेजें' : 'Send appointment request'}
         <PhosphorIcon name="arrow-right" />
       </button>
     </fieldset>
   </form>
   <p class="contact-form-notice" id={`${variant}-form-notice`}>
-    {hi
-      ? 'यह केवल डिज़ाइन पूर्वावलोकन है। अभी संदेश नहीं भेजा जा सकता और कोई जानकारी एकत्र नहीं की जाती।'
-      : 'Design preview only. Messages cannot be sent yet, and no information is collected.'}
+    {formEnabled
+      ? hi
+        ? 'अनुरोध भेजने से अपॉइंटमेंट पक्का नहीं होता। हम आपसे संपर्क करेंगे।'
+        : 'Sending a request does not confirm an appointment. We will contact you.'
+      : hi
+        ? 'अपॉइंटमेंट अनुरोध अभी उपलब्ध नहीं हैं। फ़िलहाल फ़ोन या ईमेल से संपर्क करें।'
+        : 'Appointment requests are not active yet. Please contact us by phone or email for now.'}
   </p>
+  {formEnabled && (
+    <p class="contact-form-privacy">
+      <a href={hi ? '/hi/privacy' : '/privacy'}>
+        {hi ? 'आपकी जानकारी कैसे संभाली जाती है' : 'How we handle your information'}
+      </a>
+    </p>
+  )}
+  {!formEnabled && (
+    <p class="contact-form-alternatives">
+      <a href={facts.phoneHref}>{facts.phone}</a>
+      <a href={`mailto:${facts.email}`}>{facts.email}</a>
+    </p>
+  )}
 </div>

@@ -286,7 +286,7 @@ test('Hindi informational routes render translated copy', async ({ page }, testI
     ['/hi/faq', 'कौन-से आपराधिक कानून संबंधी कार्य'],
     ['/hi/privacy', 'पूछताछ की जानकारी एकत्र नहीं की जाती'],
     ['/hi/disclaimer', 'कोई अधिवक्ता–मुवक्किल संबंध स्थापित नहीं होता'],
-    ['/hi/book-appointment', 'यह केवल डिज़ाइन पूर्वावलोकन है'],
+    ['/hi/book-appointment', 'अपॉइंटमेंट अनुरोध अभी उपलब्ध नहीं हैं'],
     ['/hi/contact', 'फोन या ईमेल से अन्विता लीगल से संपर्क करें']
   ] as const;
 
@@ -312,13 +312,15 @@ test('contact and appointment routes state their preview status', async ({ page 
   await page.goto('/book-appointment');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Book an appointment');
   await expect(
-    page.getByText(
-      'Design preview only. Messages cannot be sent yet, and no information is collected.'
-    )
+    page.getByText('Appointment requests are not active yet.', { exact: false })
   ).toBeVisible();
   await expect(page.locator('form fieldset')).toHaveAttribute('disabled', '');
+  await expect(page.locator('.contact-form')).toHaveAttribute('action', '/api/appointment.php');
+  for (const field of ['name', 'phone', 'query']) {
+    await expect(page.locator(`.contact-form [name="${field}"]`)).toHaveAttribute('required', '');
+  }
   await expect(page.getByLabel('Your name')).toBeDisabled();
-  await expect(page.getByRole('button', { name: 'Send message' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Send appointment request' })).toBeDisabled();
 });
 
 test('homepage support heading reveals on scroll and remains readable without JavaScript', async ({

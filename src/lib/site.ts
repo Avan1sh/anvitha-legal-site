@@ -1,3 +1,4 @@
+import { appointmentFormEnabled, appointmentRetentionDays } from './appointmentConfig';
 import { entryDisclaimer } from './entryDisclaimer';
 
 export type Locale = 'en' | 'hi';
@@ -207,24 +208,57 @@ const en = {
       }
     ]
   },
-  privacy: {
-    title: 'Privacy | Anvitha Legal',
-    description: 'Privacy information for the current frontend preview.',
-    heading: 'Privacy information',
-    intro: 'This frontend preview has no active enquiry form, account or document upload.',
-    sections: [
-      {
-        title: 'No enquiry collection',
-        text: 'This build does not accept enquiries through the preview form.'
+  privacy: appointmentFormEnabled
+    ? {
+        title: 'Privacy | Anvitha Legal',
+        description: 'How appointment requests are handled.',
+        heading: 'Privacy information',
+        intro:
+          'When you send an appointment request, we use the details to respond and arrange a conversation.',
+        sections: [
+          {
+            title: 'Information received',
+            text: 'Name, mobile number and query are required. Email and subject are optional. The source page, chosen language and submission time are included with the request. No document upload is accepted.'
+          },
+          {
+            title: 'Delivery',
+            text: 'The website host sends the request through its mail service to anvithalegal@gmail.com. The firm uses it to respond to your request, not for marketing.'
+          },
+          {
+            title: 'Retention',
+            text:
+              'Appointment request emails are kept in the designated inbox for up to ' +
+              appointmentRetentionDays +
+              ' days after submission, then deleted according to the firm-approved policy.'
+          },
+          {
+            title: 'Questions and deletion requests',
+            text: 'Email anvithalegal@gmail.com if you have a question about your request or want to ask for deletion.'
+          },
+          {
+            title: 'Fonts and analytics',
+            text: 'Fonts are served by this site. No third-party analytics are configured.'
+          }
+        ]
+      }
+    : {
+        title: 'Privacy | Anvitha Legal',
+        description: 'Privacy information for the current frontend preview.',
+        heading: 'Privacy information',
+        intro: 'This frontend preview has no active enquiry form, account or document upload.',
+        sections: [
+          {
+            title: 'No enquiry collection',
+            text: 'This build does not accept enquiries through the preview form.'
+          },
+          { title: 'Fonts', text: 'Fonts are served by this site.' },
+          {
+            title: 'Analytics and hosting',
+            text: 'This build does not configure third-party analytics. The final hosting provider and its technical logs must be documented in a published privacy notice.'
+          },
+          { title: 'Privacy contact', text: 'A public privacy contact has not been provided yet.' }
+        ]
       },
-      { title: 'Fonts', text: 'Fonts are served by this site.' },
-      {
-        title: 'Analytics and hosting',
-        text: 'This build does not configure third-party analytics. The final hosting provider and its technical logs must be documented in a published privacy notice.'
-      },
-      { title: 'Privacy contact', text: 'A public privacy contact has not been provided yet.' }
-    ]
-  },
   disclaimer: {
     title: 'Disclaimer | Anvitha Legal',
     description: 'Limits of the information on this website.',
@@ -413,28 +447,61 @@ const hi: typeof en = {
       }
     ]
   },
-  privacy: {
-    title: 'गोपनीयता | अन्विता लीगल',
-    description: 'वर्तमान फ्रंटएंड पूर्वावलोकन की गोपनीयता जानकारी।',
-    heading: 'गोपनीयता जानकारी',
-    intro:
-      'इस फ्रंटएंड पूर्वावलोकन में सक्रिय पूछताछ फ़ॉर्म, खाता या दस्तावेज़ अपलोड की सुविधा नहीं है।',
-    sections: [
-      {
-        title: 'पूछताछ की जानकारी एकत्र नहीं की जाती',
-        text: 'यह संस्करण पूर्वावलोकन फ़ॉर्म से पूछताछ स्वीकार नहीं करता।'
-      },
-      { title: 'फ़ॉन्ट', text: 'फ़ॉन्ट इसी वेबसाइट से उपलब्ध कराए जाते हैं।' },
-      {
-        title: 'विश्लेषण और होस्टिंग',
-        text: 'इस संस्करण में तृतीय-पक्ष विश्लेषण की व्यवस्था नहीं की गई है। अंतिम होस्टिंग प्रदाता और उसके तकनीकी लॉग का विवरण प्रकाशित गोपनीयता सूचना में दिया जाना चाहिए।'
-      },
-      {
-        title: 'गोपनीयता संपर्क',
-        text: 'सार्वजनिक गोपनीयता संपर्क विवरण अभी उपलब्ध नहीं कराया गया है।'
+  privacy: appointmentFormEnabled
+    ? {
+        title: 'गोपनीयता | अन्विता लीगल',
+        description: 'अपॉइंटमेंट अनुरोध की जानकारी कैसे संभाली जाती है।',
+        heading: 'गोपनीयता जानकारी',
+        intro:
+          'अपॉइंटमेंट अनुरोध भेजने पर हम दी गई जानकारी का उपयोग जवाब देने और बातचीत की व्यवस्था करने के लिए करते हैं।',
+        sections: [
+          {
+            title: 'प्राप्त जानकारी',
+            text: 'नाम, मोबाइल नंबर और सवाल देना आवश्यक है। ईमेल और विषय वैकल्पिक हैं। अनुरोध के साथ संबंधित पेज, चुनी गई भाषा और भेजने का समय भी शामिल होता है। दस्तावेज़ अपलोड की सुविधा नहीं है।'
+          },
+          {
+            title: 'ईमेल द्वारा भेजना',
+            text: 'वेबसाइट का होस्ट अपनी मेल सेवा से अनुरोध anvithalegal@gmail.com पर भेजता है। संस्था इसका उपयोग आपके अनुरोध का जवाब देने के लिए करती है, प्रचार के लिए नहीं।'
+          },
+          {
+            title: 'जानकारी रखने की अवधि',
+            text:
+              'अपॉइंटमेंट अनुरोध के ईमेल भेजे जाने की तारीख से अधिकतम ' +
+              appointmentRetentionDays +
+              ' दिनों तक निर्धारित इनबॉक्स में रखे जाते हैं, फिर संस्था की स्वीकृत नीति के अनुसार हटा दिए जाते हैं।'
+          },
+          {
+            title: 'सवाल और हटाने के अनुरोध',
+            text: 'अपने अनुरोध से जुड़ा सवाल पूछने या जानकारी हटाने का अनुरोध करने के लिए anvithalegal@gmail.com पर ईमेल करें।'
+          },
+          {
+            title: 'फ़ॉन्ट और विश्लेषण',
+            text: 'फ़ॉन्ट इसी वेबसाइट से उपलब्ध कराए जाते हैं। तृतीय-पक्ष विश्लेषण की व्यवस्था नहीं की गई है।'
+          }
+        ]
       }
-    ]
-  },
+    : {
+        title: 'गोपनीयता | अन्विता लीगल',
+        description: 'वर्तमान फ्रंटएंड पूर्वावलोकन की गोपनीयता जानकारी।',
+        heading: 'गोपनीयता जानकारी',
+        intro:
+          'इस फ्रंटएंड पूर्वावलोकन में सक्रिय पूछताछ फ़ॉर्म, खाता या दस्तावेज़ अपलोड की सुविधा नहीं है।',
+        sections: [
+          {
+            title: 'पूछताछ की जानकारी एकत्र नहीं की जाती',
+            text: 'यह संस्करण पूर्वावलोकन फ़ॉर्म से पूछताछ स्वीकार नहीं करता।'
+          },
+          { title: 'फ़ॉन्ट', text: 'फ़ॉन्ट इसी वेबसाइट से उपलब्ध कराए जाते हैं।' },
+          {
+            title: 'विश्लेषण और होस्टिंग',
+            text: 'इस संस्करण में तृतीय-पक्ष विश्लेषण की व्यवस्था नहीं की गई है। अंतिम होस्टिंग प्रदाता और उसके तकनीकी लॉग का विवरण प्रकाशित गोपनीयता सूचना में दिया जाना चाहिए।'
+          },
+          {
+            title: 'गोपनीयता संपर्क',
+            text: 'सार्वजनिक गोपनीयता संपर्क विवरण अभी उपलब्ध नहीं कराया गया है।'
+          }
+        ]
+      },
   disclaimer: {
     title: 'अस्वीकरण | अन्विता लीगल',
     description: 'इस वेबसाइट पर दी गई जानकारी की सीमाएँ।',

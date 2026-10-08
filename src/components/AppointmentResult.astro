@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhosphorIcon from './PhosphorIcon.astro';
+import { facts, type Locale } from '../lib/site';
+
+interface Props {
+  locale: Locale;
+  result: 'sent' | 'invalid' | 'unavailable';
+}
+
+const { locale, result } = Astro.props;
+const hi = locale === 'hi';
+const sent = result === 'sent';
+const title = sent
+  ? hi
+    ? 'अनुरोध भेज दिया गया'
+    : 'Request sent'
+  : hi
+    ? 'अनुरोध नहीं भेजा जा सका'
+    : 'Request not sent';
+const message = sent
+  ? hi
+    ? 'आपका अपॉइंटमेंट अनुरोध भेजने के लिए स्वीकार कर लिया गया है। अपॉइंटमेंट की पुष्टि के लिए हम आपसे संपर्क करेंगे।'
+    : 'Your appointment request was accepted for delivery. We will contact you to confirm an appointment.'
+  : result === 'invalid'
+    ? hi
+      ? 'कृपया नाम, सही मोबाइल नंबर और अपना सवाल भरकर फिर कोशिश करें।'
+      : 'Please check your name, mobile number and query, then try again.'
+    : hi
+      ? 'अभी अनुरोध भेजना संभव नहीं है। कृपया फ़ोन या ईमेल से संपर्क करें।'
+      : 'We could not send your request right now. Please contact us by phone or email.';
+---
+
+<BaseLayout
+  locale={locale}
+  page="book-appointment"
+  path={`/appointment-${result}`}
+  title={`${title} | ${hi ? 'अन्विता लीगल' : facts.name}`}
+  description={message}
+  noindex
+>
+  <section class="inner-hero page-wrap">
+    <div>
+      <p class="eyebrow">{hi ? 'अपॉइंटमेंट अनुरोध' : 'Appointment request'}</p>
+      <h1>{title}</h1>
+      <p class="inner-intro">{message}</p>
+      <div class="status-contact-methods">
+        <a href={facts.phoneHref}>
+          <span>{hi ? 'फ़ोन' : 'Phone'}</span>
+          <strong>{facts.phone}</strong>
+        </a>
+        <a href={`mailto:${facts.email}`}>
+          <span>{hi ? 'ईमेल' : 'Email'}</span>
+          <strong>{facts.email}</strong>
+        </a>
+      </div>
+      <a class="text-link status-link" href={hi ? '/hi/book-appointment' : '/book-appointment'}>
+        {hi ? 'अपॉइंटमेंट पेज पर वापस जाएँ' : 'Back to appointment page'}
+        <PhosphorIcon name="arrow-right" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

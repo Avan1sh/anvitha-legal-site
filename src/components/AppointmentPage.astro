@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AppointmentSection from './AppointmentSection.astro';
+import { appointmentFormEnabled } from '../lib/appointmentConfig';
 import { facts, type Locale } from '../lib/site';
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 const { locale } = Astro.props;
 const brand = locale === 'hi' ? 'अन्विता लीगल' : facts.name;
+const formEnabled = appointmentFormEnabled;
 ---
 
 <BaseLayout
@@ -15,9 +17,13 @@ const brand = locale === 'hi' ? 'अन्विता लीगल' : facts.nam
   page="book-appointment"
   title={`${locale === 'hi' ? 'अपॉइंटमेंट बुक करें' : 'Book an appointment'} | ${brand}`}
   description={
-    locale === 'hi'
-      ? 'अन्विता लीगल के अपॉइंटमेंट पेज का पूर्वावलोकन।'
-      : 'Preview the Anvitha Legal appointment page.'
+    formEnabled
+      ? locale === 'hi'
+        ? 'अन्विता लीगल से अपॉइंटमेंट का अनुरोध भेजें।'
+        : 'Send an appointment request to Anvitha Legal.'
+      : locale === 'hi'
+        ? 'अन्विता लीगल के अपॉइंटमेंट पेज का पूर्वावलोकन।'
+        : 'Preview the Anvitha Legal appointment page.'
   }
   noindex
 >
