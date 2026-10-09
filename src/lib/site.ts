@@ -1,4 +1,8 @@
-import { appointmentFormEnabled, appointmentRetentionDays } from './appointmentConfig';
+import {
+  appointmentFormEnabled,
+  localAppointmentPreviewReady,
+  localAppointmentSmtpReady
+} from './appointmentConfig';
 import { entryDisclaimer } from './entryDisclaimer';
 
 export type Locale = 'en' | 'hi';
@@ -222,18 +226,25 @@ const en = {
           },
           {
             title: 'Delivery',
-            text: 'The website host sends the request through its mail service to anvithalegal@gmail.com. The firm uses it to respond to your request, not for marketing.'
+            text: localAppointmentPreviewReady
+              ? 'On localhost, test requests stay in this development server’s memory and appear in the local test inbox. No email is sent. Use test details only.'
+              : localAppointmentSmtpReady
+                ? 'On localhost, the configured Gmail account sends the request to anvithalegal@gmail.com. The firm uses it to respond to your request, not for marketing.'
+                : 'The website host sends the request through its mail service to anvithalegal@gmail.com. The firm uses it to respond to your request, not for marketing.'
           },
           {
             title: 'Retention',
-            text:
-              'Appointment request emails are kept in the designated inbox for up to ' +
-              appointmentRetentionDays +
-              ' days after submission, then deleted according to the firm-approved policy.'
+            text: localAppointmentPreviewReady
+              ? 'Local test requests are held in memory until the development server restarts. The inbox shows up to 20 recent requests.'
+              : 'Appointment request emails are not deleted on a fixed schedule. The firm keeps them while needed to respond to the enquiry or manage a resulting matter, subject to applicable law and valid deletion requests.'
           },
           {
-            title: 'Questions and deletion requests',
-            text: 'Email anvithalegal@gmail.com if you have a question about your request or want to ask for deletion.'
+            title: localAppointmentPreviewReady
+              ? 'Clearing local test data'
+              : 'Questions and deletion requests',
+            text: localAppointmentPreviewReady
+              ? 'Restart the development server to clear the local test inbox. Do not submit real client information in test mode.'
+              : 'Email anvithalegal@gmail.com if you have a question about your request or want to ask for deletion.'
           },
           {
             title: 'Fonts and analytics',
@@ -461,18 +472,25 @@ const hi: typeof en = {
           },
           {
             title: 'ईमेल द्वारा भेजना',
-            text: 'वेबसाइट का होस्ट अपनी मेल सेवा से अनुरोध anvithalegal@gmail.com पर भेजता है। संस्था इसका उपयोग आपके अनुरोध का जवाब देने के लिए करती है, प्रचार के लिए नहीं।'
+            text: localAppointmentPreviewReady
+              ? 'लोकलहोस्ट पर परीक्षण अनुरोध केवल इस डेवलपमेंट सर्वर की मेमोरी में रहते हैं और स्थानीय परीक्षण इनबॉक्स में दिखते हैं। कोई ईमेल नहीं भेजा जाता। केवल परीक्षण विवरण भरें।'
+              : localAppointmentSmtpReady
+                ? 'लोकलहोस्ट पर कॉन्फ़िगर किया गया Gmail खाता अनुरोध anvithalegal@gmail.com पर भेजता है। संस्था इसका उपयोग आपके अनुरोध का जवाब देने के लिए करती है, प्रचार के लिए नहीं।'
+                : 'वेबसाइट का होस्ट अपनी मेल सेवा से अनुरोध anvithalegal@gmail.com पर भेजता है। संस्था इसका उपयोग आपके अनुरोध का जवाब देने के लिए करती है, प्रचार के लिए नहीं।'
           },
           {
             title: 'जानकारी रखने की अवधि',
-            text:
-              'अपॉइंटमेंट अनुरोध के ईमेल भेजे जाने की तारीख से अधिकतम ' +
-              appointmentRetentionDays +
-              ' दिनों तक निर्धारित इनबॉक्स में रखे जाते हैं, फिर संस्था की स्वीकृत नीति के अनुसार हटा दिए जाते हैं।'
+            text: localAppointmentPreviewReady
+              ? 'स्थानीय परीक्षण अनुरोध डेवलपमेंट सर्वर बंद या दोबारा शुरू होने तक मेमोरी में रहते हैं। इनबॉक्स में अधिकतम 20 हाल के अनुरोध दिखते हैं।'
+              : 'अपॉइंटमेंट अनुरोध के ईमेल तय समय-सारणी पर नहीं हटाए जाते। संस्था उन्हें पूछताछ का जवाब देने या उससे जुड़े मामले को संभालने तक, लागू कानून और मान्य हटाने के अनुरोधों के अधीन, रखती है।'
           },
           {
-            title: 'सवाल और हटाने के अनुरोध',
-            text: 'अपने अनुरोध से जुड़ा सवाल पूछने या जानकारी हटाने का अनुरोध करने के लिए anvithalegal@gmail.com पर ईमेल करें।'
+            title: localAppointmentPreviewReady
+              ? 'स्थानीय परीक्षण डेटा हटाना'
+              : 'सवाल और हटाने के अनुरोध',
+            text: localAppointmentPreviewReady
+              ? 'स्थानीय परीक्षण इनबॉक्स साफ़ करने के लिए डेवलपमेंट सर्वर दोबारा शुरू करें। परीक्षण मोड में वास्तविक मुवक्किल की जानकारी न भरें।'
+              : 'अपने अनुरोध से जुड़ा सवाल पूछने या जानकारी हटाने का अनुरोध करने के लिए anvithalegal@gmail.com पर ईमेल करें।'
           },
           {
             title: 'फ़ॉन्ट और विश्लेषण',

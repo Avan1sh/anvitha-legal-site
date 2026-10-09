@@ -810,7 +810,11 @@ p {
 }
 
 .approach-section {
-  background: var(--cream);
+  background: var(--ink);
+  color: var(--paper);
+}
+.approach-section .eyebrow {
+  color: #e3b9ae;
 }
 .approach-grid {
   display: grid;
@@ -830,7 +834,7 @@ p {
 .approach-intro > p:not(.eyebrow) {
   max-width: 485px;
   margin-bottom: 36px;
-  color: var(--ink-soft);
+  color: var(--cream);
   font-size: 1.07rem;
 }
 .approach-steps {
@@ -841,7 +845,7 @@ p {
   grid-template-columns: 74px 1fr;
   gap: 28px;
   padding: 40px 0 46px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgb(245 240 232 / 30%);
 }
 .approach-step:first-child {
   padding-top: 10px;
@@ -849,7 +853,7 @@ p {
 }
 .approach-step > span {
   padding-top: 8px;
-  color: var(--accent);
+  color: #e3b9ae;
   font-size: 0.81rem;
 }
 .approach-step h3 {
@@ -860,7 +864,7 @@ p {
 .approach-step p {
   max-width: 420px;
   margin-bottom: 0;
-  color: var(--ink-soft);
+  color: var(--cream);
 }
 
 .topics-section {
@@ -1950,6 +1954,10 @@ p {
 .appointment-copy h2 {
   margin-bottom: 36px;
 }
+.appointment-section:not(.appointment-section-page) .appointment-copy h2 {
+  font-size: clamp(2.75rem, 4.8vw, 4.5rem);
+  line-height: 1.08;
+}
 .appointment-visual img {
   width: 100%;
   height: min(690px, 54vw);
@@ -1973,10 +1981,12 @@ p {
 .contact-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   gap: 22px;
 }
 .contact-field {
   display: grid;
+  align-content: start;
   gap: 8px;
   min-width: 0;
 }
@@ -2012,6 +2022,25 @@ p {
 .contact-field textarea::placeholder {
   color: var(--ink-soft);
   opacity: 0.8;
+}
+.contact-field input[aria-invalid='true'],
+.contact-field textarea[aria-invalid='true'] {
+  border-color: #9b302a;
+  box-shadow: inset 0 0 0 1px #9b302a;
+}
+.contact-field-error,
+.contact-form-status {
+  color: #8d2924;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.contact-field-error[hidden],
+.contact-form-status[hidden] {
+  display: none;
+}
+.contact-form-status {
+  margin: 12px 0 0;
 }
 .contact-submit {
   margin-top: 24px;

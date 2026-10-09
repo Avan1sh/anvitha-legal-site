@@ -1,7 +1,7 @@
 ---
 import PhosphorIcon from './PhosphorIcon.astro';
 import { appointmentLimits } from '../lib/appointment';
-import { appointmentFormEnabled } from '../lib/appointmentConfig';
+import { appointmentFormEnabled, localAppointmentPreviewReady } from '../lib/appointmentConfig';
 import { facts, type Locale } from '../lib/site';
 
 interface Props {
@@ -54,6 +54,8 @@ const fields = [
     class="contact-form"
     action="/api/appointment.php"
     method="post"
+    data-appointment-form
+    data-locale={locale}
     aria-describedby={`${variant}-form-notice`}
   >
     <fieldset disabled={!formEnabled}>
@@ -90,7 +92,14 @@ const fields = [
               autocomplete={field.autocomplete}
               inputmode={field.id === 'phone' ? 'tel' : undefined}
               maxlength={appointmentLimits[field.id]}
+              aria-describedby={`${variant}-${field.id}-error`}
             />
+            <span
+              class="contact-field-error"
+              id={`${variant}-${field.id}-error`}
+              role="alert"
+              hidden
+            ></span>
           </div>
         ))}
         <div class="contact-field contact-field-message">
@@ -108,20 +117,38 @@ const fields = [
             placeholder={hi ? 'अपना संदेश लिखें...' : 'Write your message here...'}
             required
             maxlength={appointmentLimits.query}
+            aria-describedby={`${variant}-query-error`}
           ></textarea>
+          <span
+            class="contact-field-error"
+            id={`${variant}-query-error`}
+            role="alert"
+            hidden
+          ></span>
         </div>
       </div>
       <button class="button contact-submit" type="submit" disabled={!formEnabled}>
-        {hi ? 'अपॉइंटमेंट अनुरोध भेजें' : 'Send appointment request'}
+        {localAppointmentPreviewReady
+          ? hi
+            ? 'स्थानीय परीक्षण अनुरोध सहेजें'
+            : 'Save local test request'
+          : hi
+            ? 'अपॉइंटमेंट अनुरोध भेजें'
+            : 'Send appointment request'}
         <PhosphorIcon name="arrow-right" />
       </button>
+      <p class="contact-form-status" role="alert" hidden></p>
     </fieldset>
   </form>
   <p class="contact-form-notice" id={`${variant}-form-notice`}>
     {formEnabled
-      ? hi
-        ? 'अनुरोध भेजने से अपॉइंटमेंट पक्का नहीं होता। हम आपसे संपर्क करेंगे।'
-        : 'Sending a request does not confirm an appointment. We will contact you.'
+      ? localAppointmentPreviewReady
+        ? hi
+          ? 'स्थानीय परीक्षण: अनुरोध केवल इस डेवलपमेंट सर्वर की मेमोरी में रहेगा। कोई ईमेल नहीं भेजा जाएगा। केवल परीक्षण विवरण भरें।'
+          : 'Local test: requests stay in this development server’s memory. No email is sent. Use test details only.'
+        : hi
+          ? 'अनुरोध भेजने से अपॉइंटमेंट पक्का नहीं होता। हम आपसे संपर्क करेंगे।'
+          : 'Sending a request does not confirm an appointment. We will contact you.'
       : hi
         ? 'अपॉइंटमेंट अनुरोध अभी उपलब्ध नहीं हैं। फ़िलहाल फ़ोन या ईमेल से संपर्क करें।'
         : 'Appointment requests are not active yet. Please contact us by phone or email for now.'}
@@ -133,6 +160,13 @@ const fields = [
       </a>
     </p>
   )}
+  {localAppointmentPreviewReady && (
+    <p class="contact-form-privacy">
+      <a href="/dev/appointments">
+        {hi ? 'स्थानीय परीक्षण अनुरोध देखें' : 'View local test inbox'}
+      </a>
+    </p>
+  )}
   {!formEnabled && (
     <p class="contact-form-alternatives">
       <a href={facts.phoneHref}>{facts.phone}</a>
@@ -140,3 +174,7 @@ const fields = [
     </p>
   )}
 </div>
+
+<script>
+  import '../scripts/appointmentForm';
+</script>

@@ -39,12 +39,10 @@ $locale = form_value('locale') === 'hi' ? 'hi' : 'en';
 $from = getenv('ANVITHA_APPOINTMENT_FROM') ?: '';
 $enabled = getenv('ANVITHA_APPOINTMENTS_ENABLED') === 'true';
 $privacyApproved = getenv('ANVITHA_APPOINTMENT_PRIVACY_APPROVED') === 'true';
-$retentionDays = filter_var(getenv('ANVITHA_APPOINTMENT_RETENTION_DAYS') ?: '', FILTER_VALIDATE_INT, [
-    'options' => ['min_range' => 1, 'max_range' => 3650],
-]);
+$retentionPolicy = getenv('ANVITHA_APPOINTMENT_RETENTION_POLICY') === 'purpose';
 
 // Collection stays off until the owner approves the privacy copy and retention policy.
-if (!$enabled || !$privacyApproved || $retentionDays === false || !filter_var($from, FILTER_VALIDATE_EMAIL)
+if (!$enabled || !$privacyApproved || !$retentionPolicy || !filter_var($from, FILTER_VALIDATE_EMAIL)
     || !preg_match('/@anvithalegal\.com$/i', $from)) {
     reply(503, 'unavailable', $locale);
 }

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PhosphorIcon from './PhosphorIcon.astro';
+import { localAppointmentPreviewReady } from '../lib/appointmentConfig';
 import { facts, type Locale } from '../lib/site';
 
 interface Props {
@@ -12,16 +13,24 @@ const { locale, result } = Astro.props;
 const hi = locale === 'hi';
 const sent = result === 'sent';
 const title = sent
-  ? hi
-    ? 'अनुरोध भेज दिया गया'
-    : 'Request sent'
+  ? localAppointmentPreviewReady
+    ? hi
+      ? 'स्थानीय परीक्षण अनुरोध सहेजा गया'
+      : 'Local test request saved'
+    : hi
+      ? 'अनुरोध भेज दिया गया'
+      : 'Request sent'
   : hi
     ? 'अनुरोध नहीं भेजा जा सका'
     : 'Request not sent';
 const message = sent
-  ? hi
-    ? 'आपका अपॉइंटमेंट अनुरोध भेजने के लिए स्वीकार कर लिया गया है। अपॉइंटमेंट की पुष्टि के लिए हम आपसे संपर्क करेंगे।'
-    : 'Your appointment request was accepted for delivery. We will contact you to confirm an appointment.'
+  ? localAppointmentPreviewReady
+    ? hi
+      ? 'आपका परीक्षण अनुरोध इस डेवलपमेंट सर्वर की मेमोरी में सहेजा गया है। कोई ईमेल नहीं भेजा गया।'
+      : 'Your test request is saved in this development server’s memory. No email was sent.'
+    : hi
+      ? 'आपका अपॉइंटमेंट अनुरोध भेजने के लिए स्वीकार कर लिया गया है। अपॉइंटमेंट की पुष्टि के लिए हम आपसे संपर्क करेंगे।'
+      : 'Your appointment request was accepted for delivery. We will contact you to confirm an appointment.'
   : result === 'invalid'
     ? hi
       ? 'कृपया नाम, सही मोबाइल नंबर और अपना सवाल भरकर फिर कोशिश करें।'
@@ -54,6 +63,12 @@ const message = sent
           <strong>{facts.email}</strong>
         </a>
       </div>
+      {sent && localAppointmentPreviewReady && (
+        <a class="text-link status-link" href="/dev/appointments">
+          {hi ? 'स्थानीय परीक्षण अनुरोध देखें' : 'View local test inbox'}
+          <PhosphorIcon name="arrow-right" />
+        </a>
+      )}
       <a class="text-link status-link" href={hi ? '/hi/book-appointment' : '/book-appointment'}>
         {hi ? 'अपॉइंटमेंट पेज पर वापस जाएँ' : 'Back to appointment page'}
         <PhosphorIcon name="arrow-right" />

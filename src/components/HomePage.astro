@@ -12,7 +12,6 @@ import marriageImage from '../assets/expertise/matrimonial-lawyer.png';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BrandLogo from './BrandLogo.astro';
 import AppointmentSection from './AppointmentSection.astro';
-import SupportHeadingReveal from './SupportHeadingReveal';
 import { localizedPath, practicePath, workAreasFor } from '../lib/navigation';
 import PhosphorIcon from './PhosphorIcon.astro';
 import { copy, urlFor, type Locale } from '../lib/site';
@@ -38,7 +37,6 @@ const expertiseCards = areas.map((card) => ({
   ...card,
   ...expertiseMedia[card.slug as keyof typeof expertiseMedia]
 }));
-const supportAreas = [areas[0], areas[1], areas[5], areas[6]];
 const featuredAreas = [areas[0], areas[1], areas[3], areas[7]];
 ---
 
@@ -57,10 +55,6 @@ const featuredAreas = [areas[0], areas[1], areas[3], areas[7]];
           {h.secondary}
           <PhosphorIcon name="arrow-right" />
         </a>
-      </div>
-      <div class="hero-signature">
-        <span class="signature-line" aria-hidden="true"></span>
-        <span>{t.initiative}</span>
       </div>
     </div>
     <figure class="hero-visual">
@@ -194,30 +188,6 @@ const featuredAreas = [areas[0], areas[1], areas[3], areas[7]];
       ))}
     </div>
   </section>
-  <section class="support-section section-pad page-wrap" id="support">
-    <SupportHeadingReveal
-      client:load
-      eyebrow={locale === 'hi' ? 'हमारी सहायता' : 'What we do'}
-      title={h.supportTitle}
-      intro={h.supportIntro}
-    />
-    <div class="support-grid">
-      {h.services.map((service, i) => (
-        <a
-          class={`support-card support-card-${i + 1}`}
-          href={localizedPath(practicePath(supportAreas[i].group, supportAreas[i].slug), locale)}
-        >
-          <span class="card-number">{service.number}</span>
-          <div>
-            <h3>{service.title}</h3>
-            <p>{service.text}</p>
-          </div>
-          <PhosphorIcon name="arrow-up-right" class="card-arrow" />
-        </a>
-      ))}
-    </div>
-  </section>
-
   <section class="approach-section section-pad" data-motion-root>
     <div class="page-wrap approach-grid">
       <div class="approach-intro">

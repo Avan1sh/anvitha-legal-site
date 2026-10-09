@@ -30,6 +30,7 @@
     "@typescript-eslint/parser": "^8.71.0",
     "eslint": "^10.11.0",
     "eslint-plugin-astro": "^1.7.0",
+    "nodemailer": "^10.0.16",
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
     "typescript": "^6.0.3"
